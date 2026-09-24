@@ -1,0 +1,1835 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="data:," />
+  <title>Milestone Tracker Mockup</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap');
+    :root {
+      color-scheme: light dark;
+      --bg: #f4f1ed;
+      --surface: #fffdf9;
+      --surface-2: #ebe6df;
+      --ink: #262a27;
+      --muted: #666a65;
+      --line: #d9d3ca;
+      --accent: #a43f2f;
+      --accent-soft: #f3ded8;
+      --teal: #27665f;
+      --teal-soft: #dce9e6;
+      --gold: #8a6420;
+      --gold-soft: #f3e8cc;
+      --quiet: #5e6170;
+      --quiet-soft: #e5e5eb;
+      --shadow: 0 14px 36px rgba(53, 44, 36, .08);
+      --nav-h: 74px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #171a18;
+        --surface: #222624;
+        --surface-2: #2c302d;
+        --ink: #f4f1eb;
+        --muted: #b9bbb5;
+        --line: #3c413d;
+        --accent: #df7966;
+        --accent-soft: #492d29;
+        --teal: #7ab7ac;
+        --teal-soft: #233e39;
+        --gold: #d8ad59;
+        --gold-soft: #453a25;
+        --quiet: #b9b9cb;
+        --quiet-soft: #32323d;
+        --shadow: 0 18px 42px rgba(0,0,0,.2);
+      }
+    }
+    * { box-sizing: border-box; }
+    html { min-height: 100%; background: var(--bg); }
+    body { margin: 0; min-height: 100%; background: var(--bg); color: var(--ink); font-family: "DM Sans", sans-serif; -webkit-font-smoothing: antialiased; }
+    button, input, select, textarea { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 40%, transparent); outline-offset: 2px; }
+    svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .app { min-height: 100vh; }
+    .sidebar { display: none; }
+    .main { width: 100%; max-width: 1180px; margin: 0 auto; padding: 28px 18px calc(var(--nav-h) + 90px); }
+    .global-perspective { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 18px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+    .global-perspective > label { color: var(--muted); font-size: 11px; font-weight: 700; }
+    .global-perspective .select-wrap { flex: 0 1 245px; }
+    .global-perspective .perspective-status { flex: 1 1 100%; }
+    .view { display: none; animation: reveal .18s ease-out; }
+    .view.active { display: block; }
+    .perspective-empty { display: none !important; }
+    @keyframes reveal { from { opacity: .45; } to { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; scroll-behavior: auto !important; } }
+    .sample-flag { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font-size: 12px; font-weight: 600; }
+    .sample-flag::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+    .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin: 8px 0 26px; }
+    .page-head h1 { font-family: "Newsreader", serif; font-size: clamp(34px, 7vw, 54px); line-height: .95; letter-spacing: -.03em; margin: 7px 0 0; font-weight: 600; }
+    .page-head p { color: var(--muted); margin: 8px 0 0; font-size: 14px; line-height: 1.55; max-width: 540px; }
+    .icon-btn, .ghost-btn, .solid-btn { border: 0; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 42px; border-radius: 11px; font-weight: 650; }
+    .icon-btn { width: 44px; padding: 0; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+    .ghost-btn { padding: 0 14px; color: var(--ink); background: transparent; box-shadow: inset 0 0 0 1px var(--line); }
+    .solid-btn { padding: 0 16px; background: var(--accent); color: #fffaf5; }
+    .hero-line { display: grid; grid-template-columns: 1fr; gap: 14px; margin-bottom: 18px; }
+    .summary-card { background: var(--teal); color: #f7fbfa; border-radius: 18px 18px 6px 18px; padding: 22px; display: flex; justify-content: space-between; gap: 24px; align-items: flex-end; min-height: 152px; }
+    .summary-card .micro { font-size: 12px; opacity: .76; font-weight: 650; }
+    .summary-card strong { display: block; max-width: 500px; margin-top: 10px; font: 500 clamp(25px, 6vw, 39px)/1.02 "Newsreader", serif; letter-spacing: -.02em; }
+    .summary-number { text-align: right; flex: none; }
+    .summary-number b { display: block; font: 600 46px/1 "Newsreader", serif; }
+    .summary-number span { font-size: 11px; opacity: .75; }
+    .section-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 26px 0 12px; }
+    .section-row h2 { font: 600 23px/1.1 "Newsreader", serif; margin: 0; }
+    .section-row span { font-size: 12px; color: var(--muted); }
+    .priority-list { display: grid; gap: 10px; }
+    .milestone-card { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 17px; display: grid; grid-template-columns: 50px 1fr; gap: 13px; transition: opacity .18s; }
+    .milestone-card.done { opacity: .55; }
+    .milestone-card.quiet { background: var(--quiet-soft); border-color: transparent; }
+    .date-tile { width: 50px; height: 56px; background: var(--surface-2); border-radius: 9px; display: grid; place-content: center; text-align: center; }
+    .date-tile span { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--muted); letter-spacing: .08em; }
+    .date-tile b { font: 600 24px/1 "Newsreader", serif; }
+    .milestone-card.quiet .date-tile { background: color-mix(in srgb, var(--quiet) 14%, var(--surface)); }
+    .card-main { min-width: 0; }
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .eyebrow { font-size: 11px; color: var(--muted); font-weight: 650; margin-bottom: 4px; }
+    .card-main h3 { margin: 0; font: 600 21px/1.15 "Newsreader", serif; }
+    .card-main .desc { margin: 6px 0 0; color: var(--muted); font-size: 13px; line-height: 1.45; }
+    .days { white-space: nowrap; font-size: 12px; font-weight: 700; color: var(--accent); }
+    .priority-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 8px; border-radius: 7px; margin-top: 11px; background: var(--accent-soft); color: var(--accent); font-size: 11px; font-weight: 700; }
+    .priority-badge.teal { background: var(--teal-soft); color: var(--teal); }
+    .priority-badge.quiet { background: color-mix(in srgb, var(--quiet) 15%, transparent); color: var(--quiet); }
+    .private-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 7px; border-radius: 6px; background: color-mix(in srgb, var(--quiet) 13%, transparent); color: var(--quiet); font-size: 10px; font-weight: 700; vertical-align: middle; }
+    .private-badge svg, .private-lock svg { width: 12px; height: 12px; stroke-width: 2; }
+    .private-lock { display: inline-flex; align-items: center; flex: none; color: currentColor; }
+    .card-actions { grid-column: 1 / -1; display: flex; gap: 7px; margin-top: 3px; }
+    .card-actions button { border: 0; border-radius: 9px; min-height: 37px; padding: 0 12px; font-size: 12px; font-weight: 650; background: var(--surface-2); }
+    .card-actions button:first-child { background: var(--ink); color: var(--bg); }
+    .done-note { display: none; grid-column: 1 / -1; font-size: 12px; color: var(--teal); font-weight: 700; padding-top: 4px; }
+    .milestone-card.done .card-actions { display: none; }
+    .milestone-card.done .done-note { display: block; }
+    .lower-list { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+    .mobile-later { display: none; }
+    .lower-row { display: grid; grid-template-columns: 42px 1fr auto; align-items: center; gap: 10px; padding: 13px 14px; border-bottom: 1px solid var(--line); }
+    .lower-row:last-child { border-bottom: 0; }
+    .mini-date { font: 600 16px/1 "Newsreader", serif; text-align: center; }
+    .mini-date small { display: block; font: 700 9px/1.4 "DM Sans", sans-serif; color: var(--muted); text-transform: uppercase; }
+    .lower-row strong { font-size: 13px; }
+    .lower-row p { margin: 2px 0 0; color: var(--muted); font-size: 11px; }
+    .rank { color: var(--muted); font-size: 11px; font-weight: 650; }
+
+    /* calendar */
+    .filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+    .select-wrap { position: relative; flex: 1 1 160px; }
+    .select-wrap select { width: 100%; height: 42px; appearance: none; padding: 0 35px 0 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+    .select-wrap svg { position: absolute; right: 11px; top: 11px; width: 18px; pointer-events: none; color: var(--muted); }
+    .calendar-shell { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+    .cal-head { display: flex; justify-content: space-between; align-items: center; padding: 15px 16px; border-bottom: 1px solid var(--line); }
+    .cal-head h2 { margin: 0; font: 600 23px/1 "Newsreader", serif; }
+    .cal-nav { display: flex; gap: 5px; }
+    .cal-nav button { width: 34px; height: 34px; border: 0; border-radius: 8px; background: var(--surface-2); }
+    .weekday-grid, .calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); }
+    .weekday-grid { padding: 8px 6px 0; }
+    .weekday-grid div { padding: 6px 0 8px; text-align: center; color: var(--muted); font-size: 9px; font-weight: 700; text-transform: uppercase; }
+    .calendar-grid { padding: 0 6px 8px; }
+    .day { min-height: 66px; border-top: 1px solid var(--line); padding: 7px 3px; overflow: hidden; }
+    .day.empty { opacity: .3; }
+    .day-num { font-size: 11px; font-weight: 650; color: var(--muted); }
+    .day.today .day-num { display: inline-grid; place-content: center; width: 22px; height: 22px; margin: -4px 0 -3px; border-radius: 50%; background: var(--accent); color: white; }
+    .event-dot { display: flex; align-items: center; gap: 3px; margin-top: 5px; min-width: 0; font-size: 9px; line-height: 1.15; color: var(--ink); }
+    .event-dot::before { content: ""; width: 5px; height: 5px; border-radius: 50%; flex: none; background: var(--accent); }
+    .event-dot.anniversary::before { background: var(--gold); }
+    .event-dot.remembrance::before { background: var(--quiet); }
+    .event-dot span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .calendar-key { display: flex; flex-wrap: wrap; gap: 14px; padding: 13px 15px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; }
+    .calendar-key span { display: flex; align-items: center; gap: 5px; }
+    .calendar-key i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+    .calendar-key .ann { background: var(--gold); }
+    .calendar-key .rem { background: var(--quiet); }
+    .calendar-toolbar { display: grid; gap: 10px; margin-bottom: 14px; }
+    .calendar-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; background: var(--surface-2); border-radius: 11px; }
+    .calendar-mode button { min-height: 36px; border: 0; border-radius: 8px; background: transparent; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .calendar-mode button.active { background: var(--surface); color: var(--ink); box-shadow: 0 2px 7px rgba(0,0,0,.08); }
+    .perspective-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .perspective-row .select-wrap { min-width: 190px; }
+    .perspective-status { display: none; align-items: center; gap: 8px; flex: 1 1 100%; color: var(--teal); background: var(--teal-soft); border-radius: 9px; padding: 9px 11px; font-size: 11px; font-weight: 650; }
+    .perspective-status.visible { display: flex; }
+    .perspective-status button { margin-left: auto; border: 0; background: transparent; color: inherit; padding: 3px; font-size: 11px; font-weight: 750; }
+    .today-btn { width: auto !important; padding: 0 10px; font-size: 11px; font-weight: 700; }
+    .week-grid { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 0; }
+    .week-day { min-width: 0; min-height: 220px; padding: 8px 3px; border-right: 1px solid var(--line); }
+    .week-day:last-child { border-right: 0; }
+    .week-day.today { background: color-mix(in srgb, var(--accent-soft) 45%, transparent); }
+    .week-date { display: grid; gap: 3px; margin-bottom: 8px; text-align: center; }
+    .week-date strong { font: 600 14px/1 "Newsreader", serif; }
+    .week-date span { color: var(--muted); font-size: 8px; font-weight: 700; text-transform: uppercase; }
+    .week-events { display: grid; gap: 5px; max-height: 170px; overflow-y: auto; }
+    .week-event { padding: 6px 3px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); font-size: 9px; font-weight: 650; line-height: 1.2; overflow-wrap: anywhere; }
+    .week-event.anniversary { background: var(--gold-soft); color: var(--gold); }
+    .week-event.remembrance { background: var(--quiet-soft); color: var(--quiet); }
+    .week-empty { color: var(--muted); font-size: 11px; }
+    .house-meta { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; justify-content: flex-end; }
+    .house-label { display: inline-flex; padding: 4px 7px; border-radius: 6px; background: var(--teal-soft); color: var(--teal) !important; font-size: 9px !important; font-weight: 750; }
+    .profile-household { display: inline-flex; margin-top: 7px; padding: 5px 8px; border-radius: 6px; background: var(--teal-soft); color: var(--teal); font-size: 10px; font-weight: 750; }
+
+    /* people */
+    .search-box { position: relative; margin-bottom: 18px; }
+    .search-box svg { position: absolute; left: 13px; top: 12px; color: var(--muted); }
+    .search-box input { width: 100%; height: 46px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 0 14px 0 43px; }
+    .households { display: grid; gap: 15px; }
+    .household { background: var(--surface); border: 1px solid var(--line); border-radius: 15px; overflow: hidden; }
+    .house-head { padding: 13px 15px 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); }
+    .house-head h2 { margin: 0; font: 600 18px/1.1 "Newsreader", serif; }
+    .house-head span { font-size: 10px; color: var(--muted); }
+    .person-row { width: 100%; border: 0; border-bottom: 1px solid var(--line); background: transparent; text-align: left; display: grid; grid-template-columns: 38px 1fr auto; gap: 11px; align-items: center; padding: 11px 14px; }
+    .person-row:last-child { border-bottom: 0; }
+    .person-row:hover { background: color-mix(in srgb, var(--surface-2) 55%, transparent); }
+    .avatar { width: 38px; height: 38px; border-radius: 50%; display: grid; place-content: center; background: var(--teal-soft); color: var(--teal); font-size: 12px; font-weight: 750; }
+    .avatar.warm { background: var(--accent-soft); color: var(--accent); }
+    .avatar.gold { background: var(--gold-soft); color: var(--gold); }
+    .person-row strong { font-size: 13px; }
+    .person-row small { display: block; color: var(--muted); margin-top: 2px; font-size: 10px; }
+    .tier { font-size: 10px; font-weight: 700; padding: 5px 7px; background: var(--surface-2); border-radius: 6px; color: var(--muted); }
+    .tier.inner { background: var(--accent-soft); color: var(--accent); }
+    .tier.close { background: var(--teal-soft); color: var(--teal); }
+    .empty-search { display: none; color: var(--muted); text-align: center; padding: 32px; }
+
+    /* relationship graph */
+    .graph-note { color: var(--muted); font-size: 12px; line-height: 1.45; margin: -8px 0 12px; }
+    .graph-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 9px 14px; margin: 0 0 12px; color: var(--muted); font-size: 10px; font-weight: 650; }
+    .graph-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .graph-legend i { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); }
+    .graph-legend .family { background: var(--accent); }
+    .graph-legend .work { background: var(--gold); }
+    .graph-legend .secondary { width: 24px; height: 0; border-radius: 0; border-top: 2px dashed color-mix(in srgb, var(--muted) 72%, var(--line)); background: transparent; }
+    .graph-shell { position: relative; min-height: 540px; background: color-mix(in srgb, var(--surface) 94%, var(--teal-soft)); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; isolation: isolate; }
+    .graph-shell::before { content: ""; position: absolute; z-index: 0; inset: 50%; width: 1px; height: 1px; border-radius: 50%; box-shadow: 0 0 0 100px color-mix(in srgb, var(--teal-soft) 34%, transparent), 0 0 0 210px color-mix(in srgb, var(--line) 23%, transparent); pointer-events: none; }
+    .graph-canvas { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; overflow: visible; }
+    .graph-line { fill: none; stroke: #8b8c85; stroke: color-mix(in srgb, var(--muted) 68%, var(--line)); stroke-width: 1.6; stroke-dasharray: 7 7; vector-effect: non-scaling-stroke; }
+    .graph-line.ego { stroke: #528079; stroke: color-mix(in srgb, var(--teal) 76%, var(--line)); stroke-width: 2.6; stroke-dasharray: none; }
+    @media (prefers-color-scheme: dark) {
+      .graph-line { stroke: #91948f; stroke: color-mix(in srgb, var(--muted) 68%, var(--line)); }
+      .graph-line.ego { stroke: #6b9b91; stroke: color-mix(in srgb, var(--teal) 76%, var(--line)); }
+    }
+    .graph-label { position: absolute; z-index: 2; transform: translate(-50%,-50%); max-width: 122px; padding: 5px 9px; border: 1px solid color-mix(in srgb, var(--teal) 32%, var(--line)); border-radius: 999px; background: var(--surface); color: var(--ink); box-shadow: 0 3px 10px rgba(37,35,31,.09); font-size: 10px; font-weight: 750; line-height: 1.15; text-align: center; pointer-events: none; }
+    .graph-node { position: absolute; z-index: 3; width: 136px; min-height: 64px; transform: translate(-50%,-50%); border: 1px solid var(--line); border-radius: 13px; background: var(--surface); color: var(--ink); padding: 11px 9px; text-align: center; box-shadow: 0 9px 22px rgba(37,35,31,.09); }
+    .graph-node::before { content: ""; position: absolute; top: 9px; left: 10px; width: 7px; height: 7px; border-radius: 50%; background: var(--teal); }
+    .graph-node.family::before { background: var(--accent); }
+    .graph-node.work::before { background: var(--gold); }
+    .graph-node strong { display: block; font: 600 15px/1.1 "Newsreader", serif; }
+    .graph-node small { display: block; color: var(--muted); font-size: 9px; line-height: 1.25; margin-top: 5px; }
+    .graph-node .primary-badge { margin: 6px auto 0; font-size: 8px; padding: 3px 5px; }
+    .graph-node.center { width: 112px; min-height: 82px; border: 4px solid var(--surface); border-radius: 50%; background: var(--teal); color: #f7fbfa; display: grid; place-content: center; box-shadow: 0 0 0 1px color-mix(in srgb, var(--teal) 72%, var(--line)), 0 12px 30px rgba(39,102,95,.2); }
+    .graph-node.center::before { display: none; }
+    .graph-node.center strong { font-size: 18px; }
+    .graph-node.center small { color: rgba(247,251,250,.78); margin-top: 4px; }
+    .graph-node[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft), 0 9px 22px rgba(37,35,31,.09); }
+    .graph-members { display: none; margin-top: 14px; }
+    .graph-members.visible { display: block; }
+    .graph-members h2 { margin: 0 0 10px; font: 600 21px/1.1 "Newsreader", serif; }
+    .graph-member-list { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; }
+    .graph-member { border: 0; border-radius: 9px; background: var(--surface-2); padding: 10px; text-align: left; }
+    .graph-member strong { display: block; font-size: 12px; }
+    .graph-member span { display: block; color: var(--muted); font-size: 10px; margin-top: 2px; }
+
+    /* person detail */
+    .person-detail { display: none; }
+    .person-detail.active { display: block; }
+    .people-overview.hidden { display: none; }
+    .back-btn { border: 0; background: transparent; color: var(--muted); display: inline-flex; align-items: center; gap: 6px; padding: 4px 0; font-weight: 650; font-size: 13px; }
+    .profile-head { display: flex; gap: 15px; align-items: center; margin: 20px 0 24px; }
+    .profile-head .avatar { width: 64px; height: 64px; font-size: 19px; }
+    .profile-head h1 { margin: 0; font: 600 34px/1 "Newsreader", serif; }
+    .profile-head p { margin: 6px 0 0; color: var(--muted); font-size: 13px; }
+    .detail-grid { display: grid; gap: 14px; }
+    .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 15px; padding: 17px; }
+    .panel h2 { margin: 0 0 13px; font: 600 19px/1.15 "Newsreader", serif; }
+    .field-label { display: block; color: var(--muted); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+    .segmented { display: grid; grid-template-columns: repeat(3,1fr); gap: 5px; padding: 4px; background: var(--surface-2); border-radius: 11px; }
+    .segmented button { border: 0; border-radius: 8px; min-height: 36px; background: transparent; font-size: 11px; font-weight: 650; color: var(--muted); }
+    .segmented button.active { background: var(--surface); color: var(--ink); box-shadow: 0 2px 7px rgba(0,0,0,.08); }
+    .edge-list { display: grid; gap: 8px; }
+    .edge { border: 0; border-radius: 10px; padding: 10px; background: var(--surface-2); display: flex; align-items: center; gap: 9px; text-align: left; }
+    .edge .avatar { width: 32px; height: 32px; font-size: 10px; }
+    .edge strong { font-size: 12px; }
+    .edge span { display: block; color: var(--muted); font-size: 10px; margin-top: 1px; }
+    .milestone-list { display: grid; gap: 10px; }
+    .milestone-line { display: flex; justify-content: space-between; gap: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+    .milestone-line:last-child { border: 0; padding-bottom: 0; }
+    .milestone-line strong { font-size: 12px; }
+    .milestone-line span { color: var(--muted); font-size: 11px; text-align: right; }
+    textarea, .text-input { width: 100%; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); padding: 11px 12px; resize: vertical; }
+    textarea { min-height: 105px; line-height: 1.45; }
+    .helper { margin: 7px 0 0; font-size: 10px; color: var(--muted); }
+
+    /* invite */
+    .invite-grid { display: grid; gap: 16px; }
+    .invite-maker { background: var(--surface); border: 1px solid var(--line); border-radius: 15px; padding: 19px; }
+    .invite-maker h2 { margin: 0; font: 600 24px/1.1 "Newsreader", serif; }
+    .invite-maker > p { color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .invite-row { display: grid; grid-template-columns: 1fr auto; gap: 7px; margin-top: 14px; }
+    .invite-code { min-width: 0; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); padding: 12px; color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .copy-state { min-height: 19px; font-size: 11px; color: var(--teal); font-weight: 650; margin-top: 7px; }
+    .friend-frame { border: 1px solid var(--line); border-radius: 15px; overflow: hidden; background: var(--surface-2); }
+    .frame-label { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 14px; color: var(--muted); font-size: 11px; font-weight: 650; }
+    .frame-label span:last-child { font-weight: 500; }
+    .friend-form { margin: 0 8px 8px; border-radius: 12px; background: var(--surface); padding: 20px; }
+    .friend-form h2 { margin: 0; font: 600 27px/1 "Newsreader", serif; }
+    .friend-form .intro { color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .trust-note { display: flex; gap: 8px; align-items: flex-start; color: var(--teal); background: var(--teal-soft); border-radius: 9px; padding: 10px; margin: 14px 0; font-size: 11px; line-height: 1.4; }
+    .trust-note svg { flex: none; width: 16px; height: 16px; }
+    .form-grid { display: grid; gap: 12px; }
+    .input-group label { display: block; font-size: 10px; font-weight: 700; margin-bottom: 5px; }
+    .input-group input, .input-group select { width: 100%; height: 42px; border: 1px solid var(--line); border-radius: 9px; background: var(--bg); padding: 0 10px; }
+    .mini-household { padding: 12px; border: 1px solid var(--line); border-radius: 10px; }
+    .mini-household-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .mini-household-head strong { font-size: 12px; }
+    .link-button { border: 0; background: transparent; color: var(--accent); font-size: 11px; font-weight: 700; padding: 4px; }
+    .form-result { display: none; border-radius: 10px; padding: 18px; background: var(--teal-soft); color: var(--teal); margin-top: 12px; }
+    .form-result strong { display: block; font: 600 19px/1.2 "Newsreader", serif; }
+    .form-result span { display: block; margin-top: 5px; font-size: 11px; }
+
+    /* navigation + modal */
+    .bottom-nav { position: fixed; z-index: 30; bottom: 0; left: 0; right: 0; min-height: var(--nav-h); padding: 8px max(10px, env(safe-area-inset-left)) max(8px, env(safe-area-inset-bottom)); display: grid; grid-template-columns: repeat(5,1fr); background: color-mix(in srgb, var(--surface) 94%, transparent); border-top: 1px solid var(--line); backdrop-filter: blur(14px); }
+    .nav-btn { border: 0; background: transparent; color: var(--muted); min-width: 0; display: grid; place-content: center; justify-items: center; gap: 4px; font-size: 9px; font-weight: 650; border-radius: 10px; }
+    .nav-btn svg { width: 21px; height: 21px; }
+    .nav-btn.active { color: var(--accent); background: var(--accent-soft); }
+    .fab { position: fixed; z-index: 35; right: 18px; bottom: calc(var(--nav-h) + 16px); width: 50px; height: 50px; border: 0; border-radius: 50%; background: var(--ink); color: var(--bg); box-shadow: var(--shadow); display: grid; place-content: center; }
+    .fab svg { width: 22px; height: 22px; }
+    .sheet-backdrop { display: none; position: fixed; z-index: 50; inset: 0; background: rgba(16,18,17,.52); align-items: flex-end; }
+    .sheet-backdrop.open { display: flex; }
+    .sheet { width: 100%; max-height: 89vh; overflow: auto; background: var(--surface); border-radius: 20px 20px 0 0; padding: 17px 18px calc(22px + env(safe-area-inset-bottom)); }
+    .sheet-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+    .sheet-head h2 { margin: 0; font: 600 25px/1 "Newsreader", serif; }
+    .sheet .segmented { margin-bottom: 15px; }
+    .sheet-form { display: grid; gap: 12px; }
+    .privacy-control { display: none; align-items: center; justify-content: space-between; gap: 16px; padding: 11px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); }
+    .privacy-control.visible { display: flex; }
+    .privacy-control strong { display: block; font-size: 12px; }
+    .privacy-control span { display: block; margin-top: 2px; color: var(--muted); font-size: 10px; line-height: 1.35; }
+    .switch { position: relative; flex: none; width: 42px; height: 24px; }
+    .switch input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+    .switch-track { position: absolute; inset: 0; border-radius: 999px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); transition: background .18s; }
+    .switch-track::after { content: ""; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; border-radius: 50%; background: var(--surface); box-shadow: 0 1px 4px rgba(0,0,0,.18); transition: transform .18s; }
+    .switch input:checked + .switch-track { background: var(--quiet); box-shadow: none; }
+    .switch input:checked + .switch-track::after { transform: translateX(18px); }
+    .switch input:focus-visible + .switch-track { outline: 3px solid color-mix(in srgb, var(--accent) 40%, transparent); outline-offset: 2px; }
+    .preview-card { display: none; margin-top: 12px; padding: 14px; border-radius: 11px; background: var(--teal-soft); color: var(--teal); font-size: 12px; }
+
+    /* graph-member picker + milestone verification */
+    .mode-field.hidden { display: none; }
+    .person-picker { position: relative; }
+    .picker-input-wrap { position: relative; }
+    .picker-input-wrap svg { position: absolute; left: 12px; top: 11px; width: 18px; color: var(--muted); pointer-events: none; }
+    .person-picker input { width: 100%; height: 42px; border: 1px solid var(--line); border-radius: 9px; background: var(--bg); padding: 0 36px 0 39px; }
+    .picker-clear { position: absolute; right: 5px; top: 5px; width: 32px; height: 32px; border: 0; background: transparent; color: var(--muted); border-radius: 7px; display: none; place-content: center; }
+    .picker-clear.visible { display: grid; }
+    .picker-options { display: none; position: relative; max-height: 230px; overflow-y: auto; margin-top: 6px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: var(--shadow); }
+    .picker-options.open { display: block; }
+    .picker-group { padding: 7px 7px 3px; }
+    .picker-group + .picker-group { border-top: 1px solid var(--line); }
+    .picker-group-label { display: block; padding: 2px 6px 5px; color: var(--muted); font-size: 9px; font-weight: 750; text-transform: uppercase; letter-spacing: .06em; }
+    .picker-option { width: 100%; min-height: 38px; border: 0; border-radius: 7px; background: transparent; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 7px 8px; text-align: left; }
+    .picker-option:hover, .picker-option[aria-selected="true"] { background: var(--teal-soft); color: var(--teal); }
+    .picker-option strong { font-size: 12px; }
+    .picker-option span { color: var(--muted); font-size: 10px; }
+    .picker-empty { display: none; padding: 16px 12px; color: var(--muted); font-size: 11px; text-align: center; }
+    .picker-guidance { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 7px; color: var(--muted); font-size: 10px; line-height: 1.35; }
+    .picker-guidance .link-button { flex: none; }
+    .person-source-choice { grid-template-columns: repeat(2,1fr); }
+    .pod-picker { display: grid; gap: 9px; }
+    .pod-list, .pod-member-list { display: grid; gap: 7px; }
+    .pod-row { width: 100%; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); padding: 11px 12px; display: flex; align-items: center; justify-content: space-between; gap: 12px; text-align: left; }
+    .pod-row:hover, .pod-row[aria-selected="true"] { border-color: color-mix(in srgb, var(--teal) 52%, var(--line)); background: var(--teal-soft); color: var(--teal); }
+    .pod-row strong, .pod-member-row strong { display: block; font-size: 12px; }
+    .pod-row small, .pod-member-row small { display: block; margin-top: 2px; color: var(--muted); font-size: 10px; }
+    .pod-row svg { width: 17px; height: 17px; flex: none; color: var(--muted); }
+    .pod-member-panel { display: none; padding-top: 2px; }
+    .pod-member-panel.visible { display: grid; gap: 12px; }
+    .pod-person-form { display: grid; gap: 10px; padding: 12px; border: 1px solid var(--line); border-radius: 11px; background: color-mix(in srgb, var(--surface) 72%, var(--bg)); }
+    .pod-member-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 2px 0 7px; }
+    .pod-member-heading strong { font-size: 11px; }
+    .pod-member-heading span { color: var(--muted); font-size: 10px; }
+    .pod-member-row { width: 100%; border: 0; border-bottom: 1px solid var(--line); background: transparent; padding: 9px 2px; display: flex; align-items: center; justify-content: space-between; gap: 12px; text-align: left; }
+    .pod-member-row:last-child { border-bottom: 0; }
+    .primary-badge { display: inline-flex; align-items: center; width: max-content; padding: 4px 7px; border-radius: 6px; background: var(--gold-soft); color: var(--gold); font-size: 9px; font-weight: 750; white-space: nowrap; }
+    .person-row .primary-badge { margin-top: 5px; }
+    .duplicate-hint { display: none; margin: 7px 0 0; padding: 9px 10px; border-radius: 9px; background: var(--gold-soft); color: var(--gold); font-size: 10px; line-height: 1.4; }
+    .duplicate-hint.visible { display: block; }
+    .duplicate-hint .link-button { color: inherit; padding: 0; text-decoration: underline; text-underline-offset: 2px; }
+    .existing-node-note { display: none; margin: 8px 0 0; padding: 9px 10px; border-radius: 9px; background: var(--teal-soft); color: var(--teal); font-size: 10px; line-height: 1.4; }
+    .existing-node-note.visible { display: block; }
+    .field-error { display: none; margin: 6px 0 0; color: var(--accent); font-size: 10px; font-weight: 650; }
+    .field-error.visible { display: block; }
+    .verification-zone { display: none; margin-bottom: 18px; }
+    .verification-zone.visible { display: block; }
+    .verification-zone > h2 { margin: 0 0 10px; font: 600 22px/1.1 "Newsreader", serif; }
+    .verification-stack { display: grid; gap: 9px; }
+    .verification-card { border: 1px solid color-mix(in srgb, var(--gold) 44%, var(--line)); border-radius: 13px; background: var(--gold-soft); padding: 14px; }
+    .verification-card.disputed { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); background: var(--accent-soft); }
+    .verification-card.verified { border-color: var(--line); background: var(--surface); }
+    .verification-kicker { color: var(--gold); font-size: 10px; font-weight: 750; }
+    .verification-card.disputed .verification-kicker { color: var(--accent); }
+    .verification-card h3 { margin: 4px 0 2px; font: 600 19px/1.15 "Newsreader", serif; }
+    .verification-card p { margin: 5px 0 0; color: var(--muted); font-size: 11px; line-height: 1.45; }
+    .verification-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 11px; }
+    .verification-actions button { min-height: 35px; border: 0; border-radius: 8px; padding: 0 12px; font-size: 11px; font-weight: 700; }
+    .verify-btn { background: var(--teal); color: #f7fbfa; }
+    .dispute-btn { background: var(--surface); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
+    .verification-status { display: inline-flex; align-items: center; gap: 5px; margin-top: 6px; border-radius: 6px; padding: 4px 7px; font-size: 9px; font-weight: 750; }
+    .verification-status.verified { background: var(--teal-soft); color: var(--teal); }
+    .verification-status.pending { background: var(--gold-soft); color: var(--gold); }
+    .verification-status.disputed { background: var(--accent-soft); color: var(--accent); }
+    .milestone-line { align-items: flex-start; }
+    .milestone-line-copy { min-width: 0; }
+    .milestone-line-copy > strong { display: block; }
+    .milestone-line-copy > small { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; line-height: 1.4; }
+    .milestone-line-actions { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+    .milestone-line-actions button { min-height: 30px; border: 0; border-radius: 7px; padding: 0 9px; font-size: 10px; font-weight: 700; }
+    .dialog-backdrop { display: none; position: fixed; z-index: 70; inset: 0; background: rgba(16,18,17,.58); align-items: center; justify-content: center; padding: 18px; }
+    .dialog-backdrop.open { display: flex; }
+    .dialog-card { width: min(430px,100%); border-radius: 16px; background: var(--surface); padding: 19px; box-shadow: var(--shadow); }
+    .dialog-card h2 { margin: 0; font: 600 24px/1.1 "Newsreader", serif; }
+    .dialog-card p { margin: 7px 0 14px; color: var(--muted); font-size: 12px; line-height: 1.45; }
+    .dialog-card textarea { min-height: 90px; }
+    .dialog-actions { display: flex; justify-content: flex-end; gap: 7px; margin-top: 12px; }
+
+    @media (max-width: 759px) {
+      .main { padding-top: 14px; }
+      .bottom-nav { position: static; }
+      .global-perspective { margin-bottom: 7px; padding-bottom: 7px; gap: 6px; }
+      .global-perspective > label { flex: 0 0 auto; }
+      .global-perspective .select-wrap { flex: 1 1 170px; min-width: 0; }
+      .global-perspective .select-wrap select { height: 36px; }
+      .global-perspective .select-wrap svg { top: 9px; }
+      .hero-line .lower-list { display: none; }
+      .mobile-later { display: block; }
+      .page-head { margin-bottom: 8px; }
+      .page-head p { margin-top: 4px; font-size: 13px; line-height: 1.4; }
+      .summary-card { min-height: 90px; padding: 11px 16px; }
+      .summary-card strong { font-size: 23px; margin-top: 4px; }
+      .summary-number b { font-size: 38px; }
+      .section-row { margin-top: 10px; }
+      .graph-shell { min-height: 590px; }
+      .graph-shell::before { box-shadow: 0 0 0 76px color-mix(in srgb, var(--teal-soft) 34%, transparent), 0 0 0 155px color-mix(in srgb, var(--line) 23%, transparent); }
+      .graph-node { width: 106px; min-height: 58px; padding: 9px 6px; }
+      .graph-node::before { top: 8px; left: 8px; width: 6px; height: 6px; }
+      .graph-node strong { font-size: 13px; }
+      .graph-node.center { width: 82px; min-height: 72px; padding: 7px 5px; }
+      .graph-node.center strong { font-size: 15px; }
+      .graph-node.center small { font-size: 8px; }
+      .graph-label { max-width: 102px; padding: 4px 7px; font-size: 9px; }
+      .graph-member-list { grid-template-columns: 1fr; }
+    }
+    @media (min-width: 760px) {
+      .app { display: grid; grid-template-columns: 210px minmax(0,1fr); min-height: 100vh; }
+      .sidebar { display: flex; position: sticky; top: 0; height: 100vh; flex-direction: column; padding: 28px 16px; border-right: 1px solid var(--line); background: var(--surface); }
+      .side-context { padding: 0 10px 25px; }
+      .side-context strong { display: block; font: 600 22px/1 "Newsreader", serif; }
+      .side-context span { display: block; color: var(--muted); font-size: 11px; margin-top: 6px; }
+      .side-nav { display: grid; gap: 5px; }
+      .side-nav .nav-btn { min-height: 46px; grid-template-columns: 24px 1fr; place-content: initial; align-items: center; justify-items: start; padding: 0 12px; font-size: 12px; }
+      .side-nav .nav-btn.active { color: var(--accent); }
+      .side-footer { margin-top: auto; padding: 12px 10px; color: var(--muted); font-size: 10px; line-height: 1.45; }
+      .main { margin: 0; max-width: 1180px; padding: 28px clamp(28px,5vw,70px) 70px; }
+      .global-perspective { margin-bottom: 24px; }
+      .global-perspective .perspective-status { flex: 0 1 auto; }
+      .bottom-nav { display: none; }
+      .fab { position: fixed; right: 28px; bottom: 28px; }
+      .hero-line { grid-template-columns: minmax(0, 1.25fr) minmax(220px,.75fr); }
+      .summary-card { min-height: 178px; }
+      .priority-list { grid-template-columns: repeat(3, minmax(0,1fr)); }
+      .milestone-card { grid-template-columns: 50px 1fr; align-content: start; min-height: 245px; }
+      .card-top { display: block; }
+      .days { display: block; margin-top: 6px; }
+      .card-actions { margin-top: auto; align-self: end; }
+      .lower-list { height: 178px; }
+      .lower-row { min-height: 59px; }
+      .calendar-grid .day { min-height: 108px; padding: 9px 7px; }
+      .event-dot { font-size: 10px; }
+      .calendar-toolbar { grid-template-columns: auto 1fr; align-items: start; }
+      .calendar-mode { width: 180px; }
+      .week-grid { grid-template-columns: repeat(7, minmax(0,1fr)); }
+      .week-day { min-height: 250px; padding: 12px 8px; border-bottom: 0; border-right: 1px solid var(--line); }
+      .week-day:last-child { border-right: 0; }
+      .week-date { display: grid; gap: 3px; }
+      .week-events { max-height: 188px; }
+      .perspective-status { flex: 0 1 auto; }
+      .households { grid-template-columns: repeat(2,minmax(0,1fr)); align-items: start; }
+      .detail-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .detail-grid .wide { grid-column: 1/-1; }
+      .invite-grid { grid-template-columns: minmax(300px,.72fr) minmax(410px,1.28fr); align-items: start; }
+      .invite-maker { position: sticky; top: 40px; min-height: 280px; padding: 26px; }
+      .form-grid.two { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .sheet-backdrop { align-items: center; justify-content: center; padding: 20px; }
+      .sheet { max-width: 520px; border-radius: 18px; padding: 22px; }
+    }
+    @media (min-width: 1080px) {
+      .app { grid-template-columns: 240px minmax(0,1fr); }
+      .households { grid-template-columns: repeat(3,minmax(0,1fr)); }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" aria-label="Primary navigation">
+    <div class="side-context"><strong>Tuesday, Sep 22</strong><span id="side-milestone-count">Ten milestones in the next 30 days</span></div>
+    <nav class="side-nav">
+      <button class="nav-btn active" data-view="week"><svg aria-hidden="true"><path d="M4 5h16v15H4zM8 3v4m8-4v4M4 10h16"/><path d="m8 15 2 2 4-4"/></svg><span>This Week</span></button>
+      <button class="nav-btn" data-view="calendar"><svg aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg><span>Calendar</span></button>
+      <button class="nav-btn" data-view="people"><svg aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>People</span></button>
+      <button class="nav-btn" data-view="graph"><svg aria-hidden="true"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><path d="m11 7-5 9m7-9 5 9M7 18h10"/></svg><span>Graph</span></button>
+      <button class="nav-btn" data-view="invite"><svg aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span>Invite</span></button>
+    </nav>
+    <div class="side-footer"><span class="sample-flag">Fictional sample data</span><br>Dates are arranged around Sep 22, 2026 for this concept.</div>
+  </aside>
+
+  <main class="main">
+    <div class="global-perspective" aria-label="Global viewing perspective">
+      <label for="perspective-filter">Viewing as</label>
+      <div class="select-wrap"><select id="perspective-filter" aria-label="Viewing all pages as"><option value="you">You</option><option value="marcus">Marcus Chen</option><option value="priya">Priya Chen</option><option value="ava">Ava Chen</option><option value="liam">Liam Chen</option><option value="daniel">Daniel Rahimi</option><option value="sofia">Sofia Rahimi</option><option value="nora">Nora Rahimi</option><option value="kian">Kian Rahimi</option><option value="arman">Arman Rahimi</option><option value="laleh">Laleh Rahimi</option><option value="elise">Elise Park</option></select><svg aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></div>
+      <div class="perspective-status" id="perspective-status" role="status"><span id="perspective-copy"></span><button id="reset-perspective" type="button">Reset to You</button></div>
+      <button class="ghost-btn" id="reset-data" type="button" title="Clear saved data and restore the original sample">Reset sample data</button>
+    </div>
+    <section class="view active" id="view-week">
+      <header class="page-head">
+        <div><span class="sample-flag">Sample data</span><h1>This week</h1><p>From this week’s dates, priority is ranked by closeness × milestone significance. Tenure and kids’ birthdays carry extra weight.</p></div>
+      </header>
+      <section class="verification-zone" id="verification-zone" aria-live="polite">
+        <h2 id="verification-zone-title">Needs your attention</h2>
+        <div class="verification-stack" id="verification-stack"></div>
+      </section>
+      <div class="hero-line">
+        <article class="summary-card">
+          <div><span class="micro" id="digest-perspective-label">Your short list</span><strong id="digest-summary-copy">Three messages worth making time for.</strong></div>
+          <div class="summary-number"><b id="digest-priority-count">3</b><span>high priority</span></div>
+        </article>
+        <div class="lower-list" aria-label="Later milestones">
+          <div class="lower-row" data-digest-people="daniel"><div class="mini-date"><small>Oct</small>01</div><div><strong>Daniel’s birthday</strong><p>Cousin · turning 38</p></div><span class="rank">#4</span></div>
+          <div class="lower-row" data-digest-people="nora"><div class="mini-date"><small>Oct</small>11</div><div><strong>Nora’s birthday</strong><p>Daniel’s daughter · turning 4</p></div><span class="rank">#5</span></div>
+          <div class="lower-row" data-digest-people="elise"><div class="mini-date"><small>Oct</small>04</div><div><strong>Elise’s birthday</strong><p>Colleague · turning 31</p></div><span class="rank">#6</span></div>
+        </div>
+      </div>
+
+      <div class="section-row" id="priority-heading"><h2>The three that matter</h2><span>Priority order, not date order</span></div>
+      <div class="priority-list" id="priority-list">
+        <article class="milestone-card" data-card="anniversary" data-digest-people="marcus priya">
+          <div class="date-tile"><span>Sep</span><b>24</b></div>
+          <div class="card-main"><div class="card-top"><div><div class="eyebrow">Marcus & Priya</div><h3>25th anniversary</h3></div><span class="days">In 2 days</span></div><p class="desc">A major year for someone in your inner circle.</p><span class="priority-badge">Inner circle · milestone year</span></div>
+          <div class="card-actions"><button data-action="done">Mark congratulated</button><button data-action="snooze">Snooze</button></div><div class="done-note">Congratulated — kept for this week</div>
+        </article>
+        <article class="milestone-card" data-card="mom" data-digest-people="laleh">
+          <div class="date-tile"><span>Sep</span><b>27</b></div>
+          <div class="card-main"><div class="card-top"><div><div class="eyebrow">Laleh Rahimi</div><h3>Birthday</h3></div><span class="days">In 5 days</span></div><p class="desc">Your mom. A quick call probably beats a perfect message.</p><span class="priority-badge teal">Inner circle · parent</span></div>
+          <div class="card-actions"><button data-action="done">Mark congratulated</button><button data-action="snooze">Snooze</button></div><div class="done-note">Congratulated — kept for this week</div>
+        </article>
+        <article class="milestone-card" data-card="ava" data-digest-people="ava">
+          <div class="date-tile"><span>Sep</span><b>26</b></div>
+          <div class="card-main"><div class="card-top"><div><div class="eyebrow">Ava Chen</div><h3>Turning 7</h3></div><span class="days">In 4 days</span></div><p class="desc">Marcus and Priya’s daughter. Kids’ birthdays carry extra weight.</p><span class="priority-badge teal">Close · child birthday</span></div>
+          <div class="card-actions"><button data-action="done">Mark congratulated</button><button data-action="snooze">Snooze</button></div><div class="done-note">Congratulated — kept for this week</div>
+        </article>
+      </div>
+
+      <div class="mobile-later">
+        <div class="section-row"><h2>Also coming up</h2><span>Lower priority</span></div>
+        <div class="lower-list">
+          <div class="lower-row" data-digest-people="daniel"><div class="mini-date"><small>Oct</small>01</div><div><strong>Daniel’s birthday</strong><p>Cousin · turning 38</p></div><span class="rank">#4</span></div>
+          <div class="lower-row" data-digest-people="nora"><div class="mini-date"><small>Oct</small>11</div><div><strong>Nora’s birthday</strong><p>Daniel’s daughter · turning 4</p></div><span class="rank">#5</span></div>
+          <div class="lower-row" data-digest-people="elise"><div class="mini-date"><small>Oct</small>04</div><div><strong>Elise’s birthday</strong><p>Colleague · turning 31</p></div><span class="rank">#6</span></div>
+        </div>
+      </div>
+
+      <div class="section-row" id="quiet-heading"><h2>Quiet reminders</h2><span>Different tone, intentionally</span></div>
+      <div class="priority-list" id="quiet-list">
+        <article class="milestone-card quiet" id="quiet-card" data-digest-people="marcus">
+          <div class="date-tile"><span>Sep</span><b>28</b></div>
+          <div class="card-main"><div class="card-top"><div><div class="eyebrow">For Marcus</div><h3>Wei Chen’s remembrance</h3></div><span class="days" style="color:var(--quiet)">In 6 days</span></div><p class="desc">The anniversary of his father’s death. Consider a simple “thinking of you” note.</p><span class="priority-badge quiet">Close · remembrance</span></div>
+          <div class="card-actions"><button data-action="done">Mark reached out</button><button data-action="snooze">Remind tomorrow</button></div><div class="done-note">Reached out — kept for this week</div>
+        </article>
+        <article class="milestone-card quiet" id="remission-card" data-digest-people="arman" data-private-owner="arman">
+          <div class="date-tile"><span>Sep</span><b>29</b></div>
+          <div class="card-main"><div class="card-top"><div><div class="eyebrow">Arman Rahimi</div><h3>Day of Cancer Remission</h3></div><span class="days" style="color:var(--quiet)">In 7 days</span></div><p class="desc">A quiet personal marker. No outreach prompt.</p><span class="priority-badge quiet">Yearly · all day</span> <span class="private-badge"><svg aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Private</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="view" id="view-calendar">
+      <header class="page-head"><div><span class="sample-flag">Sample data</span><h1>Calendar</h1><p>Move between a month overview and a roomier week view, then filter by household, type, or person.</p></div></header>
+      <div class="calendar-toolbar">
+        <div class="calendar-mode" role="group" aria-label="Calendar view"><button class="active" data-calendar-mode="month">Month</button><button data-calendar-mode="week">Week</button></div>
+      </div>
+      <div class="filter-row">
+        <div class="select-wrap"><select id="household-filter" aria-label="Filter by household"><option value="all">All households</option><option value="chen">Chen family</option><option value="rahimi">Rahimi family</option><option value="daniel">Daniel’s family</option><option value="work">Work</option></select><svg aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></div>
+        <div class="select-wrap"><select id="type-filter" aria-label="Filter by milestone type"><option value="all">All milestone types</option><option value="birthday">Birthdays</option><option value="anniversary">Anniversaries</option><option value="remembrance">Remembrances</option></select><svg aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></div>
+      </div>
+      <div class="calendar-shell">
+        <div class="cal-head"><h2 id="cal-title">September 2026</h2><div class="cal-nav"><button class="today-btn" id="cal-today" type="button">Today</button><button id="cal-prev" aria-label="Previous month">‹</button><button id="cal-next" aria-label="Next month">›</button></div></div>
+        <div id="month-calendar"><div class="weekday-grid" aria-hidden="true"><div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div><div class="calendar-grid" id="calendar-grid"></div></div>
+        <div class="week-grid" id="week-grid" hidden></div>
+        <div class="calendar-key"><span><i></i>Birthday</span><span><i class="ann"></i>Anniversary</span><span><i class="rem"></i>Remembrance</span></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-people">
+      <div class="people-overview" id="people-overview">
+        <header class="page-head"><div><span class="sample-flag">Sample data</span><h1>People</h1><p>Households emerge from real relationships—not folders you have to maintain.</p></div></header>
+        <div class="search-box"><svg aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="people-search" type="search" placeholder="Search people or relationships" /></div>
+        <div class="households" id="households">
+          <section class="household" data-household="chen" data-search="chen family marcus close friend priya spouse ava daughter liam son">
+            <div class="house-head"><h2>The Chen family</h2><div class="house-meta"><span class="house-label">Family friends</span><span>4 people · 6 family links</span></div></div>
+            <button class="person-row" data-person="marcus"><span class="avatar">MC</span><span><strong>Marcus Chen</strong><small>Close friend · household anchor</small><span class="primary-badge">Primary member</span></span><span class="tier inner">Inner circle</span></button>
+            <button class="person-row" data-person="priya"><span class="avatar warm">PC</span><span><strong>Priya Chen</strong><small>Marcus’s wife</small></span><span class="tier close">Close · inherited</span></button>
+            <button class="person-row" data-person="ava"><span class="avatar gold">AC</span><span><strong>Ava Chen</strong><small>Their daughter · age 6</small></span><span class="tier close">Close · inherited</span></button>
+            <button class="person-row" data-person="liam"><span class="avatar gold">LC</span><span><strong>Liam Chen</strong><small>Their son · age 10</small></span><span class="tier close">Close · inherited</span></button>
+          </section>
+          <section class="household" data-household="daniel" data-search="daniel cousin sofia wife spouse nora daughter kian father family">
+            <div class="house-head"><h2>Daniel’s family</h2><div class="house-meta"><span class="house-label">Cousins</span><span>4 people · 4 edges</span></div></div>
+            <button class="person-row" data-person="daniel"><span class="avatar">DR</span><span><strong>Daniel Rahimi</strong><small>Cousin · household anchor</small><span class="primary-badge">Primary member</span></span><span class="tier close">Close</span></button>
+            <button class="person-row" data-person="sofia"><span class="avatar warm">SR</span><span><strong>Sofia Rahimi</strong><small>Daniel’s wife</small></span><span class="tier">Casual · inherited</span></button>
+            <button class="person-row" data-person="nora"><span class="avatar gold">NR</span><span><strong>Nora Rahimi</strong><small>Their daughter · age 3</small></span><span class="tier">Casual · inherited</span></button>
+            <button class="person-row" data-person="kian"><span class="avatar">KR</span><span><strong>Kian Rahimi</strong><small>Daniel’s father · Arman’s brother</small></span><span class="tier">Casual</span></button>
+          </section>
+          <section class="household" data-household="parents" data-search="parents rahimi arman dad father laleh mom mother">
+            <div class="house-head"><h2>Parents</h2><div class="house-meta"><span class="house-label">Immediate family</span><span>2 people · 1 edge</span></div></div>
+            <button class="person-row" data-person="arman"><span class="avatar">AR</span><span><strong>Arman Rahimi</strong><small>Dad · married to Laleh</small><span class="primary-badge">Primary member</span></span><span class="tier inner">Inner circle</span></button>
+            <button class="person-row" data-person="laleh"><span class="avatar warm">LR</span><span><strong>Laleh Rahimi</strong><small>Mom · married to Arman</small></span><span class="tier inner">Inner circle</span></button>
+          </section>
+          <section class="household" data-household="work" data-search="work elise park colleague casual">
+            <div class="house-head"><h2>Work</h2><div class="house-meta"><span class="house-label">Work friends</span><span>1 person</span></div></div>
+            <button class="person-row" data-person="elise"><span class="avatar">EP</span><span><strong>Elise Park</strong><small>Colleague</small><span class="primary-badge">Primary member</span></span><span class="tier">Casual</span></button>
+          </section>
+        </div>
+        <div class="empty-search" id="empty-search">No people match that search.</div>
+      </div>
+      <div class="person-detail" id="person-detail">
+        <button class="back-btn" id="person-back"><svg aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>All people</button>
+        <div id="detail-content"></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-graph">
+      <header class="page-head"><div><span class="sample-flag">Sample data</span><h1>Relationship graph</h1><p>Households around the selected person. Labeled lines show their relationship to the current perspective; dashed lines show that two households also know each other.</p></div></header>
+      <p class="graph-note">Tap a household to see its members, then tap a person to open their details.</p>
+      <div class="graph-legend" aria-label="Graph legend"><span><i class="family"></i>Family</span><span><i></i>Friends</span><span><i class="work"></i>Work</span><span><i class="secondary"></i>Households connected</span></div>
+      <div class="graph-shell" id="graph-shell" aria-label="Relationship graph">
+        <svg class="graph-canvas" id="graph-lines" viewBox="0 0 1000 700" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <div id="graph-nodes"></div>
+      </div>
+      <section class="panel graph-members" id="graph-members" aria-live="polite"><h2 id="graph-members-title"></h2><div class="graph-member-list" id="graph-member-list"></div></section>
+    </section>
+
+    <section class="view" id="view-invite">
+      <header class="page-head"><div><span class="sample-flag">Sample data</span><h1>Collect once</h1><p>Send one simple link. Your friend adds the household dates they’re comfortable sharing—no account or app install.</p></div></header>
+      <div class="invite-grid">
+        <section class="invite-maker">
+          <h2>Invite a household</h2>
+          <p>Choose the person you know. Their family relationships will arrive with the dates, already connected.</p>
+          <div class="input-group"><label for="invite-person">Send to</label><select id="invite-person"><option>Marcus Chen</option><option>Daniel Rahimi</option><option>Elise Park</option></select></div>
+          <div class="invite-row"><div class="invite-code" id="invite-code">Demo invite · marcus-chen-7K2Q</div><button class="solid-btn" id="copy-invite">Copy</button></div>
+          <div class="copy-state" id="copy-state" role="status"></div>
+          <p class="helper">This is a non-working demo link. A real version would expire and show you when it was opened.</p>
+        </section>
+        <section class="friend-frame">
+          <div class="frame-label"><span>What your friend sees</span><span>Interactive demo</span></div>
+          <div class="friend-form" id="friend-form">
+            <h2>Help me remember the good dates.</h2>
+            <p class="intro">Add only what you’d like me to remember. Exact birth years are optional.</p>
+            <div class="trust-note"><svg aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span>No login. No app. You can review everything before sending.</span></div>
+            <div class="form-grid two">
+              <div class="input-group"><label for="friend-name">Your name</label><input id="friend-name" value="Marcus Chen" /></div>
+              <div class="input-group"><label for="friend-birthday">Your birthday · year optional</label><input id="friend-birthday" type="text" value="May 16, 1976" placeholder="Month, day, optional year" /></div>
+            </div>
+            <div class="mini-household" style="margin-top:12px">
+              <div class="mini-household-head"><strong>Partner</strong><button class="link-button" type="button">Remove</button></div>
+              <div class="form-grid two"><div class="input-group"><label>Name</label><input value="Priya Chen" /></div><div class="input-group"><label>Birthday · year optional</label><input type="text" value="Feb 3, 1978" placeholder="Month, day, optional year" /></div></div>
+              <div class="input-group" style="margin-top:10px"><label>Wedding anniversary</label><input type="date" value="2001-09-24" /></div>
+            </div>
+            <div class="mini-household" style="margin-top:10px">
+              <div class="mini-household-head"><strong>Children</strong><button class="link-button" id="add-child" type="button">+ Add child</button></div>
+              <div class="form-grid two" id="child-list"><div class="input-group"><label>Child’s name</label><input value="Ava Chen" /></div><div class="input-group"><label>Birthday · year optional</label><input type="text" value="Sep 26, 2019" placeholder="Month, day, optional year" /></div></div>
+            </div>
+            <button class="solid-btn" style="width:100%;margin-top:13px" id="preview-submit" type="button">Preview submission</button>
+            <div class="form-result" id="form-result" role="status"><strong>Looks good.</strong><span>In the real app, Marcus would review the household before sending it to you.</span></div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Primary navigation">
+    <button class="nav-btn active" data-view="week"><svg aria-hidden="true"><path d="M4 5h16v15H4zM8 3v4m8-4v4M4 10h16"/><path d="m8 15 2 2 4-4"/></svg><span>This Week</span></button>
+    <button class="nav-btn" data-view="calendar"><svg aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg><span>Calendar</span></button>
+    <button class="nav-btn" data-view="people"><svg aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>People</span></button>
+    <button class="nav-btn" data-view="graph"><svg aria-hidden="true"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><path d="m11 7-5 9m7-9 5 9M7 18h10"/></svg><span>Graph</span></button>
+    <button class="nav-btn" data-view="invite"><svg aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span>Invite</span></button>
+  </nav>
+  <button class="fab" id="open-add" aria-label="Add person or milestone"><svg aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+</div>
+
+<div class="sheet-backdrop" id="add-sheet" aria-hidden="true">
+  <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+    <div class="sheet-head"><h2 id="sheet-title">Add manually</h2><button class="icon-btn" id="close-add" aria-label="Close"><svg><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+    <div class="segmented" id="add-mode"><button class="active" data-mode="person">Person</button><button data-mode="milestone">Milestone</button><button data-mode="remembrance">Remembrance</button></div>
+    <div class="sheet-form">
+      <div class="input-group mode-field" id="person-source-field">
+        <label>Where should this person go?</label>
+        <div class="segmented person-source-choice" id="person-source-choice" role="group" aria-label="Choose a pod for this person"><button class="active" type="button" data-person-source="new">New Pod</button><button type="button" data-person-source="existing">Existing Pod</button></div>
+      </div>
+      <div class="input-group mode-field" id="new-person-field"><label for="add-name">Name</label><input class="text-input" id="add-name" placeholder="Full name" /><p class="duplicate-hint" id="duplicate-person-hint"></p></div>
+      <div class="input-group mode-field hidden" id="link-person-field">
+        <label>Choose a visible Pod</label>
+        <div class="pod-picker" id="existing-pod-picker">
+          <div class="pod-list" id="existing-pod-list" role="listbox" aria-label="Visible pods"></div>
+          <div class="pod-member-panel" id="pod-member-panel">
+            <div class="pod-person-form">
+              <div class="input-group"><label for="existing-pod-name">Name</label><input class="text-input" id="existing-pod-name" placeholder="Full name" /><p class="duplicate-hint" id="existing-pod-duplicate-hint"></p></div>
+              <div class="input-group"><label for="existing-pod-relation" id="existing-pod-relation-label">Relationship to primary member</label><select class="text-input" id="existing-pod-relation"><option value="">Choose relationship</option><option value="parent">Parent</option><option value="spouse">Spouse</option><option value="sibling">Sibling</option><option value="friend">Friend</option><option value="colleague">Colleague</option></select></div>
+            </div>
+            <div><div class="pod-member-heading"><strong id="pod-member-title">Current members</strong><span id="pod-member-count"></span></div><div class="pod-member-list" id="pod-member-list" aria-label="Current pod members"></div></div>
+          </div>
+          <div class="picker-empty" id="link-person-empty">No visible pods are available.</div>
+        </div>
+        <div class="picker-guidance"><span>Pods and members follow the current Viewing as scope.</span></div>
+        <p class="existing-node-note" id="existing-node-note"></p>
+        <p class="field-error" id="link-person-error">Choose a visible Pod, enter a name, and choose the relationship.</p>
+      </div>
+      <div class="input-group mode-field" id="new-person-household-field"><label for="add-household">Pod</label><select id="add-household" class="text-input"><option value="new">Create a new Pod</option></select><p class="helper">This person will be the Pod’s primary member.</p></div>
+      <div class="input-group mode-field hidden" id="existing-person-field">
+        <label for="person-picker-search">Person</label>
+        <div class="person-picker" id="person-picker">
+          <div class="picker-input-wrap"><svg aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="person-picker-search" type="search" role="combobox" aria-expanded="false" aria-controls="person-picker-options" aria-autocomplete="list" autocomplete="off" placeholder="Search graph members" /><button class="picker-clear" id="person-picker-clear" type="button" aria-label="Clear selected person"><svg aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"/></svg></button></div>
+          <div class="picker-options" id="person-picker-options" role="listbox"></div>
+          <div class="picker-empty" id="person-picker-empty">No graph member matches that search.</div>
+        </div>
+        <div class="picker-guidance"><span>Only graph members visible in this perspective can be selected.</span><button class="link-button" id="add-person-first" type="button">Add person first</button></div>
+        <p class="field-error" id="person-picker-error">Choose an existing graph member.</p>
+      </div>
+      <div class="input-group mode-field hidden" id="add-date-field"><label for="add-date">Date</label><input class="text-input" id="add-date" type="date" /></div>
+      <div class="input-group mode-field hidden" id="add-type-field"><label for="add-type">Milestone type</label><select class="text-input" id="add-type"><option value="birthday">Birthday</option><option value="anniversary">Anniversary</option><option value="milestone">Milestone</option></select></div>
+      <div class="input-group mode-field" id="add-relation-field"><label for="add-relation" id="add-relation-label">Relationship</label><input class="text-input" id="add-relation" placeholder="Friend, cousin, colleague…" /></div>
+      <div class="input-group mode-field" id="add-tier-field"><label for="add-tier">Closeness</label><select id="add-tier" class="text-input"><option>Inner circle</option><option selected>Close</option><option>Casual</option></select></div>
+      <div class="privacy-control" id="privacy-control">
+        <div><strong>Private milestone</strong><span>Visible only to you and members of this person’s household.</span></div>
+        <label class="switch" aria-label="Private milestone"><input id="add-private" type="checkbox" /><span class="switch-track" aria-hidden="true"></span></label>
+      </div>
+      <button class="solid-btn" id="preview-add">Preview entry</button>
+      <button class="solid-btn" id="save-add" type="button" style="margin-top:8px">Save entry</button>
+    </div>
+    <div class="preview-card" id="add-preview" role="status"></div>
+    <p class="helper">Entries are saved in this browser (localStorage) and survive reloads. “Reset sample data” in the header restores the original sample.</p>
+  </section>
+</div>
+
+<div class="dialog-backdrop" id="dispute-dialog" aria-hidden="true">
+  <section class="dialog-card" role="dialog" aria-modal="true" aria-labelledby="dispute-title">
+    <h2 id="dispute-title">What needs correcting?</h2>
+    <p>The note is optional. Sepand will see it in the owner view.</p>
+    <label class="field-label" for="dispute-note">Correction note</label>
+    <textarea id="dispute-note" placeholder="For example: the date is a day early"></textarea>
+    <div class="dialog-actions"><button class="ghost-btn" id="cancel-dispute" type="button">Cancel</button><button class="solid-btn" id="submit-dispute" type="button">Flag for review</button></div>
+  </section>
+</div>
+
+<script>
+(function(){
+  /* ================= persistence (localStorage) =================
+     The app's whole working state lives in one JSON document under STORE_KEY.
+     First run seeds from the SEED_* sample data below and saves immediately;
+     every mutation (add person / add milestone / verify / dispute / closeness)
+     writes through via saveStore(). "Reset sample data" clears the key and
+     reloads, which reseeds. Nothing here touches the network. */
+  const STORE_KEY='milestoneTracker.v1';
+  function loadStoreData(){ try{ const raw=localStorage.getItem(STORE_KEY); if(!raw) return null; const s=JSON.parse(raw); return (s&&s.version===1)?s:null; }catch(err){ return null; } }
+  function saveStore(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(currentStoreData())); }catch(err){ console.warn('[milestone-tracker] save failed:',err); } }
+  function resetSampleData(){ if(!window.confirm('Reset all data to the original sample? Your added people and milestones will be lost.')) return; try{ localStorage.removeItem(STORE_KEY); }catch(err){} location.reload(); }
+  function currentStoreData(){
+    return {version:1,events:events,people:people,kinEdges:kinEdges,graphHouseholds:graphHouseholds,selfPod:selfPod,directConnections:directConnections,perspectiveNames:perspectiveNames,genders:genders,householdByPerson:householdByPerson,graphHouseholdLinks:graphHouseholdLinks,graphKeyByHouse:graphKeyByHouse,ui:{viewingAs:(document.getElementById('perspective-filter')||{}).value||'you',calendarMode:calendarMode}};
+  }
+  let storeData=loadStoreData();
+  const isFreshSeed=!storeData;
+  /* Live bindings: each is assigned from storage, or from its SEED_* constant,
+     right after that seed block is initialized below. */
+  let events,people,kinEdges,graphHouseholds,selfPod,directConnections,perspectiveNames,genders,householdByPerson,graphHouseholdLinks,graphKeyByHouse;
+
+  const views = document.querySelectorAll('.view');
+  const navs = document.querySelectorAll('.nav-btn[data-view]');
+  function showView(name){
+    views.forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
+    navs.forEach(n => n.classList.toggle('active', n.dataset.view === name));
+    if(name !== 'people') closePerson();
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  navs.forEach(n => n.addEventListener('click', () => showView(n.dataset.view)));
+
+  document.querySelectorAll('[data-action="done"]').forEach(btn => btn.addEventListener('click', () => btn.closest('.milestone-card').classList.toggle('done')));
+  document.querySelectorAll('[data-action="snooze"]').forEach(btn => btn.addEventListener('click', () => { btn.textContent = 'Snoozed until tomorrow'; btn.disabled = true; }));
+
+  /* Every milestone records who entered it and its current verification state.
+     Records added for somebody else begin pending; disputed records shown here
+     represent a pending record that its person has already challenged. */
+  const SEED_EVENTS = [
+    {id:'marcus-priya-anniversary',date:'2026-09-24', label:'Marcus + Priya · 25th anniversary', short:'25th anniv.', title:'25th anniversary', type:'anniversary', house:'chen', person:'marcus', people:['marcus','priya'],addedBy:'marcus',verification:'verified'},
+    {id:'ava-birthday',date:'2026-09-26', label:'Ava turns 7', short:'Ava · 7', title:'Turning 7', type:'birthday', house:'chen', person:'ava', people:['ava'],addedBy:'ava',verification:'verified'},
+    {id:'laleh-birthday',date:'2026-09-27', label:'Laleh’s birthday', short:'Laleh', title:'Birthday', type:'birthday', house:'rahimi', person:'laleh', people:['laleh'],addedBy:'laleh',verification:'verified'},
+    {id:'wei-remembrance',date:'2026-09-28', label:'Wei Chen remembrance', short:'Wei', title:'Wei Chen remembrance', type:'remembrance', house:'chen', person:'marcus', people:['marcus'],addedBy:'marcus',verification:'verified'},
+    {id:'arman-remission',date:'2026-09-29', label:'Arman · Day of Cancer Remission', short:'Remission day', title:'Day of Cancer Remission', type:'remembrance', house:'rahimi', person:'arman', people:['arman'], owner:'arman', isPrivate:true,addedBy:'arman',verification:'verified'},
+    {id:'you-work-anniversary',date:'2026-09-30', label:'Sepand · work anniversary', short:'Your work anniv.', title:'Work anniversary', type:'anniversary', house:'self', person:'you', people:['you'],addedBy:'daniel',verification:'pending'},
+    {id:'daniel-birthday',date:'2026-10-01', label:'Daniel turns 38', short:'Daniel', title:'Birthday', type:'birthday', house:'daniel', person:'daniel', people:['daniel'],addedBy:'you',verification:'pending'},
+    {id:'elise-birthday',date:'2026-10-04', label:'Elise turns 31', short:'Elise', title:'Birthday', type:'birthday', house:'work', person:'elise', people:['elise'],addedBy:'you',verification:'disputed',disputeNote:'The date is right, but the birth year is not.'},
+    {id:'arman-laleh-anniversary',date:'2026-10-07', label:'Arman + Laleh · 42nd anniversary', short:'42nd anniv.', title:'42nd anniversary', type:'anniversary', house:'rahimi', person:'arman', people:['arman','laleh'],addedBy:'arman',verification:'verified'},
+    {id:'nora-birthday',date:'2026-10-11', label:'Nora turns 4', short:'Nora · 4', title:'Turning 4', type:'birthday', house:'daniel', person:'nora', people:['nora'],addedBy:'nora',verification:'verified'},
+    {id:'liam-birthday',date:'2026-10-15', label:'Liam turns 11', short:'Liam · 11', title:'Turning 11', type:'birthday', house:'chen', person:'liam', people:['liam'],addedBy:'liam',verification:'verified'},
+    {id:'sofia-birthday',date:'2026-10-20', label:'Sofia’s birthday', short:'Sofia', title:'Birthday', type:'birthday', house:'daniel', person:'sofia', people:['sofia'],addedBy:'sofia',verification:'verified'}
+  ];
+  events = storeData ? storeData.events : SEED_EVENTS;
+  const SEED_PNAMES = {you:'Sepand',marcus:'Marcus Chen',priya:'Priya Chen',ava:'Ava Chen',liam:'Liam Chen',daniel:'Daniel Rahimi',sofia:'Sofia Rahimi',nora:'Nora Rahimi',kian:'Kian Rahimi',arman:'Arman Rahimi',laleh:'Laleh Rahimi',elise:'Elise Park'};
+  perspectiveNames = storeData ? storeData.perspectiveNames : SEED_PNAMES;
+  const SEED_DIRECT = {
+    marcus:['marcus','priya','ava','liam'], priya:['priya','marcus','ava','liam'], ava:['ava','marcus','priya','liam'], liam:['liam','marcus','priya','ava'],
+    daniel:['daniel','sofia','nora','kian'], sofia:['sofia','daniel','nora','kian'], nora:['nora','daniel','sofia','kian'], kian:['kian','daniel','sofia','nora','arman'],
+    arman:['arman','laleh','kian'], laleh:['laleh','arman'], elise:['elise']
+  };
+  directConnections = storeData ? storeData.directConnections : SEED_DIRECT;
+  let familyCircle = []; // derived from the relationship graph below (deriveFamilyCircle); assigned before first use
+  const SEED_HBP = {marcus:'chen',priya:'chen',ava:'chen',liam:'chen',daniel:'daniel',sofia:'daniel',nora:'daniel',kian:'daniel',arman:'rahimi',laleh:'rahimi',elise:'work'};
+  householdByPerson = storeData ? storeData.householdByPerson : SEED_HBP;
+  function currentPerspective(){ return document.getElementById('perspective-filter').value; }
+  function visiblePersonIds(){
+    const perspective=currentPerspective();
+    if(perspective==='you') return Object.keys(perspectiveNames);
+    return Array.from(new Set([...(directConnections[perspective]||[]),...familyCircle]));
+  }
+  function isPersonVisible(id){ return visiblePersonIds().includes(id); }
+  function canViewPrivateMilestone(ownerId){
+    const perspective=currentPerspective();
+    return perspective==='you'||householdByPerson[perspective]===householdByPerson[ownerId];
+  }
+  let calendarMode = 'month';
+  let calYear = 2026, calMonth = 8;
+  let weekStart = new Date(2026,8,20);
+  const sampleToday = '2026-09-22';
+  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const shortMonths = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const weekNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  function isoDate(date){ return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0'); }
+  function visibleEvents(iso){
+    const hf=document.getElementById('household-filter').value;
+    const tf=document.getElementById('type-filter').value;
+    const connected=visiblePersonIds();
+    return events.filter(e=>e.date===iso && (hf==='all'||e.house===hf) && (tf==='all'||e.type===tf) && e.people.some(id=>connected.includes(id)) && (!e.isPrivate||canViewPrivateMilestone(e.owner)));
+  }
+  function privateLockMarkup(){ return '<span class="private-lock" aria-label="Private" title="Private"><svg aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span>'; }
+  function renderMonth(){
+    document.getElementById('cal-title').textContent=monthNames[calMonth]+' '+calYear;
+    const grid=document.getElementById('calendar-grid'); grid.innerHTML='';
+    const start=new Date(calYear,calMonth,1).getDay();
+    const days=new Date(calYear,calMonth+1,0).getDate();
+    for(let i=0;i<start;i++){const d=document.createElement('div');d.className='day empty';grid.appendChild(d);}
+    for(let day=1;day<=days;day++){
+      const iso=calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+      const cell=document.createElement('div'); cell.className='day'+(iso===sampleToday?' today':''); cell.innerHTML='<span class="day-num">'+day+'</span>';
+      visibleEvents(iso).forEach(e=>{const mark=document.createElement('div');mark.className='event-dot '+e.type;mark.title=e.label+(e.isPrivate?' · Private':'');mark.innerHTML=(e.isPrivate?privateLockMarkup():'')+'<span>'+e.short+'</span>';cell.appendChild(mark);});
+      grid.appendChild(cell);
+    }
+  }
+  function renderWeek(){
+    const end=new Date(weekStart); end.setDate(end.getDate()+6);
+    document.getElementById('cal-title').textContent=shortMonths[weekStart.getMonth()]+' '+weekStart.getDate()+'–'+(end.getMonth()!==weekStart.getMonth()?shortMonths[end.getMonth()]+' ':'')+end.getDate()+', '+end.getFullYear();
+    const grid=document.getElementById('week-grid'); grid.innerHTML='';
+    for(let i=0;i<7;i++){
+      const date=new Date(weekStart); date.setDate(date.getDate()+i); const iso=isoDate(date); const dayEvents=visibleEvents(iso);
+      const cell=document.createElement('section'); cell.className='week-day'+(iso===sampleToday?' today':'');
+      cell.innerHTML='<div class="week-date"><span>'+weekNames[date.getDay()]+'</span><strong>'+shortMonths[date.getMonth()]+' '+date.getDate()+'</strong></div><div class="week-events">'+(dayEvents.length?dayEvents.map(e=>'<div class="week-event '+e.type+'" title="'+e.label+(e.isPrivate?' · Private':'')+'">'+(e.isPrivate?privateLockMarkup():'')+e.label+'</div>').join(''):'<span class="week-empty">No milestones</span>')+'</div>';
+      grid.appendChild(cell);
+    }
+  }
+  function renderCalendar(){
+    const isWeek=calendarMode==='week';
+    document.getElementById('month-calendar').hidden=isWeek;
+    document.getElementById('week-grid').hidden=!isWeek;
+    document.getElementById('cal-prev').setAttribute('aria-label',isWeek?'Previous week':'Previous month');
+    document.getElementById('cal-next').setAttribute('aria-label',isWeek?'Next week':'Next month');
+    if(isWeek) renderWeek(); else renderMonth();
+  }
+  document.querySelectorAll('[data-calendar-mode]').forEach(btn=>btn.addEventListener('click',()=>{calendarMode=btn.dataset.calendarMode;document.querySelectorAll('[data-calendar-mode]').forEach(b=>b.classList.toggle('active',b===btn));renderCalendar();saveStore();}));
+  document.getElementById('cal-prev').addEventListener('click',()=>{if(calendarMode==='week'){weekStart.setDate(weekStart.getDate()-7);}else{calMonth--;if(calMonth<0){calMonth=11;calYear--;}}renderCalendar();});
+  document.getElementById('cal-next').addEventListener('click',()=>{if(calendarMode==='week'){weekStart.setDate(weekStart.getDate()+7);}else{calMonth++;if(calMonth>11){calMonth=0;calYear++;}}renderCalendar();});
+  document.getElementById('cal-today').addEventListener('click',()=>{calYear=2026;calMonth=8;weekStart=new Date(2026,8,20);renderCalendar();});
+  document.getElementById('household-filter').addEventListener('change',renderCalendar);
+  document.getElementById('type-filter').addEventListener('change',renderCalendar);
+  renderCalendar();
+
+  const SEED_PEOPLE = {
+    marcus:{name:'Marcus Chen', initials:'MC', relation:'Close friend · household anchor', tier:'Inner circle', household:'The Chen family', family:[['Priya Chen','Spouse','priya'],['Ava Chen','Daughter · age 6','ava'],['Liam Chen','Son · age 10','liam']], milestones:[['Birthday','May 16 · turning 51'],['Wedding anniversary','Sep 24 · 25th anniversary'],['Wei Chen remembrance','Sep 28 · father']]},
+    priya:{name:'Priya Chen', initials:'PC', relation:'Marcus’s wife', tier:'Close', household:'The Chen family', family:[['Marcus Chen','Spouse','marcus'],['Ava Chen','Daughter · age 6','ava'],['Liam Chen','Son · age 10','liam']], milestones:[['Birthday','Feb 3 · turning 49'],['Wedding anniversary','Sep 24 · 25th anniversary']]},
+    ava:{name:'Ava Chen', initials:'AC', relation:'Marcus & Priya’s daughter', tier:'Close', household:'The Chen family', family:[['Marcus Chen','Father','marcus'],['Priya Chen','Mother','priya'],['Liam Chen','Brother','liam']], milestones:[['Birthday','Sep 26 · turning 7']]},
+    liam:{name:'Liam Chen', initials:'LC', relation:'Marcus & Priya’s son', tier:'Close', household:'The Chen family', family:[['Marcus Chen','Father','marcus'],['Priya Chen','Mother','priya'],['Ava Chen','Sister','ava']], milestones:[['Birthday','Oct 15 · turning 11']]},
+    daniel:{name:'Daniel Rahimi', initials:'DR', relation:'Cousin · household anchor', tier:'Close', household:'Daniel’s family', family:[['Sofia Rahimi','Spouse','sofia'],['Nora Rahimi','Daughter · age 3','nora'],['Kian Rahimi','Father','kian']], milestones:[['Birthday','Oct 1 · turning 38'],['Wedding anniversary','Apr 18 · 8th anniversary']]},
+    sofia:{name:'Sofia Rahimi', initials:'SR', relation:'Daniel’s wife', tier:'Casual', household:'Daniel’s family', family:[['Daniel Rahimi','Spouse','daniel'],['Nora Rahimi','Daughter · age 3','nora']], milestones:[['Birthday','Oct 20 · turning 36'],['Wedding anniversary','Apr 18 · 8th anniversary']]},
+    nora:{name:'Nora Rahimi', initials:'NR', relation:'Daniel & Sofia’s daughter', tier:'Casual', household:'Daniel’s family', family:[['Daniel Rahimi','Father','daniel'],['Sofia Rahimi','Mother','sofia']], milestones:[['Birthday','Oct 11 · turning 4']]},
+    kian:{name:'Kian Rahimi', initials:'KR', relation:'Daniel’s father · Arman’s brother', tier:'Casual', household:'Daniel’s family', family:[['Daniel Rahimi','Son','daniel'],['Arman Rahimi','Brother','arman']], milestones:[]},
+    arman:{name:'Arman Rahimi', initials:'AR', relation:'Dad', tier:'Inner circle', household:'Parents', family:[['Laleh Rahimi','Spouse','laleh'],['Kian Rahimi','Brother','kian']], milestones:[['Birthday','Jan 9 · turning 70'],['Wedding anniversary','Oct 7 · 42nd anniversary'],['Day of Cancer Remission','Sep 29 · yearly, all day',true]]},
+    laleh:{name:'Laleh Rahimi', initials:'LR', relation:'Mom', tier:'Inner circle', household:'Parents', family:[['Arman Rahimi','Spouse','arman']], milestones:[['Birthday','Sep 27 · turning 67'],['Wedding anniversary','Oct 7 · 42nd anniversary']]},
+    elise:{name:'Elise Park', initials:'EP', relation:'Colleague', tier:'Casual', household:'Work', family:[], milestones:[['Birthday','Oct 4 · turning 31']]}
+  };
+  people = storeData ? storeData.people : SEED_PEOPLE;
+  const profileEventByKey={
+    'marcus|Wedding anniversary':'marcus-priya-anniversary','marcus|Wei Chen remembrance':'wei-remembrance',
+    'priya|Wedding anniversary':'marcus-priya-anniversary','ava|Birthday':'ava-birthday','liam|Birthday':'liam-birthday',
+    'daniel|Birthday':'daniel-birthday','sofia|Birthday':'sofia-birthday','nora|Birthday':'nora-birthday',
+    'arman|Wedding anniversary':'arman-laleh-anniversary','arman|Day of Cancer Remission':'arman-remission',
+    'laleh|Birthday':'laleh-birthday','laleh|Wedding anniversary':'arman-laleh-anniversary','elise|Birthday':'elise-birthday'
+  };
+  Object.keys(people).forEach(function(id){
+    if(people[id].milestones.length&&!Array.isArray(people[id].milestones[0])) return; /* loaded from storage: already linked */
+    people[id].milestones=people[id].milestones.map(function(m,index){
+      const eventId=profileEventByKey[id+'|'+m[0]];
+      const linked=eventId?events.find(function(e){return e.id===eventId;}):null;
+      return {id:eventId||id+'-profile-'+index,title:m[0],dateLabel:m[1],isPrivate:!!m[2],addedBy:linked?linked.addedBy:id,verification:linked?linked.verification:'verified',eventId:eventId||null,disputeNote:linked&&linked.disputeNote?linked.disputeNote:''};
+    });
+  });
+
+  /*__REL_BEGIN__*/
+  const SEED_GENDERS={marcus:'male',priya:'female',ava:'female',liam:'male',daniel:'male',sofia:'female',nora:'female',kian:'male',arman:'male',laleh:'female',elise:'female'};
+  genders = storeData ? storeData.genders : SEED_GENDERS;
+
+  /* Typed relationship graph — the single source of truth for who is related to whom.
+     Base kinds only: 'parent' (stored once as [parent,'parent',child]; the child direction
+     is derived), plus 'spouse', 'sibling', 'friend', 'colleague' (stored once, traversed
+     both ways). Grandparents, aunts/uncles, nieces/nephews, cousins and in-laws are
+     DERIVED by the colloquial kinship engine below — never stored. */
+  const SEED_KIN_EDGES=[
+    ['arman','parent','you'],['laleh','parent','you'],
+    ['you','friend','marcus'],['you','colleague','elise'],
+    ['marcus','spouse','priya'],
+    ['marcus','parent','ava'],['priya','parent','ava'],
+    ['marcus','parent','liam'],['priya','parent','liam'],
+    ['arman','spouse','laleh'],
+    ['arman','sibling','kian'],
+    ['kian','parent','daniel'],
+    ['daniel','spouse','sofia'],
+    ['daniel','parent','nora'],['sofia','parent','nora']
+  ];
+  kinEdges = storeData ? storeData.kinEdges : SEED_KIN_EDGES;
+  let kinAdj={};
+  function kinLink(from,rel,to){ (kinAdj[from]=kinAdj[from]||[]).push({rel:rel,to:to}); }
+  function buildKinAdj(){
+    kinAdj={};
+    kinEdges.forEach(function(e){
+      if(e[1]==='parent'){ kinLink(e[2],'parent',e[0]); kinLink(e[0],'child',e[2]); }
+      else { kinLink(e[0],e[1],e[2]); kinLink(e[2],e[1],e[0]); }
+    });
+  }
+  buildKinAdj();
+  function gendered(id,male,female,neutral){ return genders[id]==='male'?male:(genders[id]==='female'?female:neutral); }
+  function stepTerm(rel,id){
+    if(rel==='parent') return gendered(id,'father','mother','parent');
+    if(rel==='child') return gendered(id,'son','daughter','child');
+    if(rel==='sibling') return gendered(id,'brother','sister','sibling');
+    if(rel==='friend') return 'close friend';
+    return rel; /* spouse, colleague */
+  }
+  /* Shortest typed path between two people. rels[i] is the colloquial step term
+     describing nodes[i+1] as seen from nodes[i]. */
+  function kinPath(viewer,target){
+    if(viewer===target) return {nodes:[viewer],rels:[]};
+    const prev={}; prev[viewer]=null;
+    const queue=[viewer];
+    while(queue.length){
+      const cur=queue.shift();
+      const edges=kinAdj[cur]||[];
+      for(let i=0;i<edges.length;i++){
+        const e=edges[i];
+        if(Object.prototype.hasOwnProperty.call(prev,e.to)) continue;
+        prev[e.to]={from:cur,rel:e.rel};
+        if(e.to===target){
+          const nodes=[target], rels=[]; let n=target;
+          while(prev[n]){ rels.unshift(stepTerm(prev[n].rel,n)); nodes.unshift(prev[n].from); n=prev[n].from; }
+          return {nodes:nodes,rels:rels};
+        }
+        queue.push(e.to);
+      }
+    }
+    return null;
+  }
+  const FRIEND_PREFIX='friend’s ', COLLEAGUE_PREFIX='colleague’s ';
+  /* Colloquial kinship composition: fold a chain of step terms into one term.
+     Keeps the deliberate simplifications of the previous engine (a cousin's child
+     is a niece/nephew, not "cousin once removed"). */
+  function foldKin(a,b,midId,targetId){
+    const isChild=(b==='daughter'||b==='son'||b==='child');
+    const isSib=(b==='brother'||b==='sister'||b==='sibling');
+    const isPar=(b==='father'||b==='mother'||b==='parent');
+    function prefixed(prefix){
+      const inner=foldKin(a.slice(prefix.length),b,midId,targetId);
+      return prefix+inner;
+    }
+    if(a.indexOf(FRIEND_PREFIX)===0) return prefixed(FRIEND_PREFIX);
+    if(a.indexOf(COLLEAGUE_PREFIX)===0) return prefixed(COLLEAGUE_PREFIX);
+    if(a==='colleague'&&(isChild||isSib||isPar||b==='spouse')) return COLLEAGUE_PREFIX+b;
+    if((a==='cousin'||a==='brother'||a==='sister')&&isChild) return gendered(targetId,'nephew','niece','Niece or nephew');
+    if((a==='aunt'||a==='uncle')&&isChild) return 'cousin';
+    if((a==='nephew'||a==='niece')&&isChild) return gendered(targetId,'grandnephew','grandniece','Grandniece or grandnephew');
+    if((a==='brother-in-law'||a==='sister-in-law')&&isChild) return gendered(targetId,'nephew','niece','Niece or nephew');
+    if((a==='father'||a==='mother'||a==='parent')&&isSib) return gendered(targetId,'uncle','aunt','Aunt or uncle');
+    if((a==='father'||a==='mother'||a==='parent')&&isPar) return gendered(targetId,'grandfather','grandmother','Grandparent');
+    if((a==='father'||a==='mother'||a==='parent')&&isChild) return gendered(targetId,'brother','sister','Sibling');
+    if((a==='daughter'||a==='son'||a==='child')&&isChild) return gendered(targetId,'grandson','granddaughter','Grandchild');
+    if((a==='daughter'||a==='son'||a==='child')&&isSib) return gendered(targetId,'son','daughter','Child');
+    if((a==='brother'||a==='sister'||a==='sibling')&&isPar) return gendered(targetId,'father','mother','Parent');
+    if((a==='grandfather'||a==='grandmother'||a==='grandparent')&&isSib) return gendered(targetId,'great-uncle','great-aunt','Great-aunt or uncle');
+    if((a==='grandfather'||a==='grandmother'||a==='grandparent')&&isChild) return gendered(targetId,'uncle','aunt','Aunt or uncle');
+    if(a==='spouse'&&isPar) return gendered(targetId,'father-in-law','mother-in-law','Parent-in-law');
+    if(a==='spouse'&&isSib) return gendered(targetId,'brother-in-law','sister-in-law','Sibling-in-law');
+    if((a==='father'||a==='mother')&&b==='spouse') return gendered(targetId,'father','mother','Parent');
+    if((a==='brother'||a==='sister'||a==='sibling')&&b==='spouse') return gendered(targetId,'brother-in-law','sister-in-law','Sibling-in-law');
+    if((a==='daughter'||a==='son'||a==='child')&&b==='spouse') return gendered(targetId,'son-in-law','daughter-in-law','Child-in-law');
+    if(a==='uncle'&&b==='spouse') return gendered(targetId,'uncle','aunt','Uncle or aunt');
+    if(a==='aunt'&&b==='spouse') return gendered(targetId,'uncle','aunt','Uncle or aunt');
+    if((a==='nephew'||a==='niece')&&b==='spouse') return gendered(midId,'nephew','niece','nibling')+'’s '+gendered(targetId,'wife','husband','spouse');
+    if((a==='father-in-law'||a==='mother-in-law')&&isSib) return gendered(targetId,'uncle-in-law','aunt-in-law','Uncle or aunt-in-law');
+    if(a==='cousin'&&b==='spouse') return 'cousin-in-law';
+    if(a==='close friend'&&isChild) return FRIEND_PREFIX+b;
+    if(a==='close friend'&&b==='spouse') return FRIEND_PREFIX+'spouse';
+    if(a==='close friend'&&(isPar||isSib)) return FRIEND_PREFIX+b;
+    return b;
+  }
+  function composeKinship(found){
+    if(!found.rels.length) return 'Self';
+    let term=found.rels[0];
+    for(let i=1;i<found.rels.length;i++) term=foldKin(term,found.rels[i],found.nodes[i],found.nodes[i+1]);
+    return term.charAt(0).toUpperCase()+term.slice(1);
+  }
+  function kinshipInfo(viewer,id){
+    if(id===viewer) return {term:'Self',path:[viewer],relations:[],explanation:'This is you'};
+    const found=kinPath(viewer,id);
+    if(!found) return {term:(people[id]&&people[id].relation)||'Connection',path:[],relations:[]};
+    const term=composeKinship(found);
+    const viewerFirst=viewer==='you'?'you':people[viewer].name.split(' ')[0];
+    let explanation='Directly connected to '+viewerFirst;
+    if(found.nodes.length>2){
+      const viaId=found.nodes[1];
+      const viaFirst=people[viaId]?people[viaId].name.split(' ')[0]:'your connection';
+      explanation='via '+viaFirst+', '+(viewer==='you'?'your':viewerFirst+'’s')+' '+found.rels[0];
+    }
+    return {term:term,path:found.nodes,relations:found.rels,explanation:explanation};
+  }
+  /* Relationship term for person cards, search and graph — always relative to the
+     current "Viewing as" perspective, never owner-relative. */
+  function relationshipInfo(id){ return kinshipInfo(currentPerspective(),id); }
+  function relationshipSearchText(id){
+    const term=relationshipInfo(id).term.toLowerCase();
+    const aliases={father:'dad',mother:'mom',niece:'nieces',nephew:'nephews','mother-in-law':'mother in law','father-in-law':'father in law','sister-in-law':'sister in law','brother-in-law':'brother in law','daughter-in-law':'daughter in law','son-in-law':'son in law'};
+    return term+' '+(aliases[term]||'');
+  }
+
+  /* Households: membership + map position only. Labels and color-coding are DERIVED
+     from the relationship graph (never hand-entered). */
+  const SEED_PODS={
+    parents:{name:'Parents',members:['arman','laleh'],primaryMemberId:'arman',x:20,y:20},
+    daniel:{name:'Daniel’s family',members:['daniel','sofia','nora','kian'],primaryMemberId:'daniel',x:20,y:80},
+    chen:{name:'The Chen family',members:['marcus','priya','ava','liam'],primaryMemberId:'marcus',x:80,y:20},
+    work:{name:'Elise Park’s household',members:['elise'],primaryMemberId:'elise',x:80,y:80}
+  };
+  graphHouseholds = storeData ? storeData.graphHouseholds : SEED_PODS;
+  const SEED_SELF_POD={key:'self',name:'Your household',members:['you'],primaryMemberId:'you'};
+  selfPod = storeData ? storeData.selfPod : SEED_SELF_POD;
+  /* Calendar filter + privacy logic address households by these keys. */
+  const SEED_GKB={chen:'chen',daniel:'daniel',rahimi:'parents',work:'work'};
+  graphKeyByHouse = storeData ? storeData.graphKeyByHouse : SEED_GKB;
+  /* Every Pod has one explicit primary member. Relationship labels inside that Pod
+     and perspective-relative Pod labels are derived from this same anchor. */
+  function householdAnchor(houseKey){ return graphHouseholds[houseKey].primaryMemberId; }
+  /* Household label, derived from the anchor's composed kinship term relative to the
+     viewer. Owner-relative for canonical labels; pass the perspective for graph edges. */
+  function householdLabelFor(houseKey,viewer){
+    const info=kinshipInfo(viewer,householdAnchor(houseKey));
+    if(!info.path.length) return null;
+    const term=info.term.toLowerCase();
+    if(term==='self') return 'Immediate family';
+    if(/^(father|mother|parent|son|daughter|child|brother|sister|sibling|spouse|husband|wife)$/.test(term)) return 'Immediate family';
+    if(/-in-law$/.test(term)) return 'Immediate family';
+    if(term==='cousin') return 'Cousins';
+    if(term==='uncle'||term==='great-uncle') return 'Uncle’s family';
+    if(term==='aunt'||term==='great-aunt') return 'Aunt’s family';
+    if(term==='nephew') return 'Nephew’s family';
+    if(term==='niece') return 'Niece’s family';
+    if(term==='grandfather'||term==='grandmother'||term==='grandparent') return 'Grandparents';
+    if(term==='close friend'||term==='friend') return 'Family friends';
+    if(term.indexOf(FRIEND_PREFIX)===0) return 'Friend’s family';
+    if(term.indexOf(COLLEAGUE_PREFIX)===0) return 'Colleague’s family';
+    if(term==='colleague') return 'Work friends';
+    return 'Extended family';
+  }
+  /* Node color-coding follows the canonical (owner-relative) derived label. */
+  function householdTone(houseKey){
+    const label=householdLabelFor(houseKey,'you');
+    if(label==='Work friends') return 'work';
+    if(label==='Family friends'||label==='Friend’s family'||label==='Colleague’s family') return 'friend';
+    return 'family';
+  }
+  const SEED_LINKS=[{from:'parents',to:'daniel',people:['arman','daniel']}];
+  graphHouseholdLinks = storeData ? storeData.graphHouseholdLinks : SEED_LINKS;
+  if(isFreshSeed) saveStore(); /* persist the seed on first run */
+  function hasKinshipPath(a,b){ return !!kinPath(a,b); }
+  function deriveFamilyCircle(){
+    /* The owner's family circle always includes the owner, plus every member of
+       households that derive as Immediate family or Cousins in the owner view. */
+    const ids=['you'];
+    Object.keys(graphHouseholds).forEach(function(key){
+      const label=householdLabelFor(key,'you');
+      if(label==='Immediate family'||label==='Cousins'){
+        graphHouseholds[key].members.forEach(function(id){ if(ids.indexOf(id)<0) ids.push(id); });
+      }
+    });
+    return ids;
+  }
+
+  /* Integrity checks over the typed relationship graph. Runs on load; the shipped
+     sample data must report zero violations. */
+  function validate(){
+    const errors=[];
+    const peopleIds=Object.keys(people).concat(['you']);
+    const parentsOf={};
+    kinEdges.forEach(function(e){ if(e[1]==='parent'){ (parentsOf[e[2]]=parentsOf[e[2]]||[]).push(e[0]); } });
+    const pairKind={};
+    function pairKey(a,b){ return a<b?a+'|'+b:b+'|'+a; }
+    kinEdges.forEach(function(e){
+      const a=e[0], kind=e[1], b=e[2];
+      if(peopleIds.indexOf(a)<0) errors.push('Unknown person in edge: '+a);
+      if(peopleIds.indexOf(b)<0) errors.push('Unknown person in edge: '+b);
+      if(a===b) errors.push('Self edge: '+a);
+      const prev=pairKind[pairKey(a,b)];
+      if(prev){
+        if(prev.kind!==kind) errors.push('Contradictory stored edges between '+a+' and '+b+': '+prev.kind+' vs '+kind);
+        else if(kind==='parent'&&prev.dir!==a+'>'+b) errors.push('Parent edge stored in both directions between '+a+' and '+b);
+        else errors.push('Duplicate stored '+kind+' edge between '+a+' and '+b+' (store each base edge once)');
+      } else pairKind[pairKey(a,b)]={kind:kind,dir:a+'>'+b};
+    });
+    /* 1. parent edges form a DAG: no cycles, no one their own ancestor */
+    const tempMark={}, permMark={};
+    function visit(n,trail){
+      if(tempMark[n]){ errors.push('Parent cycle: '+trail.concat(n).join(' → ')); return; }
+      if(permMark[n]) return;
+      tempMark[n]=true;
+      (parentsOf[n]||[]).forEach(function(p){ visit(p,trail.concat(n)); });
+      tempMark[n]=false; permMark[n]=true;
+    }
+    peopleIds.forEach(function(id){ visit(id,[]); });
+    function sharedParents(a,b){
+      const pa=parentsOf[a]||[], pb=parentsOf[b]||[];
+      return pa.filter(function(p){ return pb.indexOf(p)>=0; });
+    }
+    function areSiblings(a,b){
+      if(a===b) return false;
+      const k=pairKind[pairKey(a,b)];
+      if(k&&k.kind==='sibling') return true;
+      return sharedParents(a,b).length>0;
+    }
+    function areSpouses(a,b){
+      const k=pairKind[pairKey(a,b)];
+      return !!(k&&k.kind==='spouse');
+    }
+    /* 3. sibling consistency: parent-sharers derive as siblings, so a conflicting
+       stored base edge (e.g. friend) between them is a violation */
+    for(let i=0;i<peopleIds.length;i++) for(let j=i+1;j<peopleIds.length;j++){
+      const a=peopleIds[i], b=peopleIds[j];
+      if(sharedParents(a,b).length){
+        const k=pairKind[pairKey(a,b)];
+        if(k&&k.kind!=='sibling') errors.push(a+' and '+b+' share a parent but have a stored '+k.kind+' edge (they derive as siblings)');
+      }
+    }
+    function isUncleAuntOf(x,y){
+      /* x is a (great-)uncle/aunt of y iff x is a sibling of a (grand)parent of y,
+         or married to one */
+      const elders=(parentsOf[y]||[]).slice();
+      (parentsOf[y]||[]).forEach(function(p){
+        (parentsOf[p]||[]).forEach(function(g){ if(elders.indexOf(g)<0) elders.push(g); });
+      });
+      return elders.some(function(p){
+        if(areSiblings(x,p)) return true;
+        return peopleIds.some(function(s){ return areSpouses(x,s)&&areSiblings(s,p); });
+      });
+    }
+    /* 4+5. every derived cousin / uncle / aunt term must be backed by real lineage */
+    for(let i=0;i<peopleIds.length;i++) for(let j=0;j<peopleIds.length;j++){
+      if(i===j) continue;
+      const a=peopleIds[i], b=peopleIds[j];
+      const term=kinshipInfo(a,b).term.toLowerCase();
+      if(term==='cousin'){
+        const shared=sharedParents(a,b);
+        if(shared.length) errors.push(a+' and '+b+' derive as cousins but share parent '+shared[0]+' — the lineage says siblings');
+        const lineage=(parentsOf[a]||[]).some(function(pa){
+          return (parentsOf[b]||[]).some(function(pb){ return areSiblings(pa,pb); });
+        });
+        if(!lineage) errors.push(a+' and '+b+' derive as cousins but their parents are not siblings (no shared grandparent)');
+      }
+      if(term==='uncle'||term==='aunt'||term==='great-uncle'||term==='great-aunt'){
+        if(!isUncleAuntOf(b,a)) errors.push(b+' derives as the '+term+' of '+a+' but is not a sibling (or the spouse of a sibling) of a '+(term.indexOf('great-')===0?'grand':'')+'parent of '+a);
+      }
+    }
+    /* 6. every household's derived label must resolve (a household with no path to
+       the owner is flagged) */
+    Object.keys(graphHouseholds).forEach(function(key){
+      const pod=graphHouseholds[key], members=pod.members;
+      if(!members.length) errors.push('Pod '+key+' has no members');
+      members.forEach(function(id){ if(peopleIds.indexOf(id)<0) errors.push('Pod '+key+' lists unknown person '+id); });
+      const primaryCount=members.filter(function(id){return id===pod.primaryMemberId;}).length;
+      if(primaryCount!==1) errors.push('Pod '+key+' must have exactly one primary member');
+      if(!householdLabelFor(key,'you')) errors.push('Pod '+key+' has no derivable label (no kinship path from the owner to any member)');
+    });
+    const selfPrimaryCount=selfPod.members.filter(function(id){return id===selfPod.primaryMemberId;}).length;
+    if(selfPrimaryCount!==1) errors.push('Pod self must have exactly one primary member');
+    /* Perspective regression: Daniel reaches Arman through his father Kian, so this
+       must remain uncle—not parent—and the household badge must follow that result. */
+    if(kinshipInfo('daniel','arman').term!=='Uncle') errors.push('Daniel must derive Arman as Uncle');
+    if(householdLabelFor('parents','daniel')!=='Uncle’s family') errors.push('Daniel must see the Parents household as Uncle’s family');
+    return errors;
+  }
+  /*__REL_END__*/
+
+  function graphCurveControl(a,b,bend){
+    return {x:(a.x+b.x)/2-(b.y-a.y)*bend,y:(a.y+b.y)/2+(b.x-a.x)*bend};
+  }
+  function graphLabel(a,b,text,bend){
+    const c=graphCurveControl(a,b,bend), t=.5;
+    const x=(1-t)*(1-t)*a.x+2*(1-t)*t*c.x+t*t*b.x;
+    const y=(1-t)*(1-t)*a.y+2*(1-t)*t*c.y+t*t*b.y;
+    return '<span class="graph-label" style="left:'+x+'%;top:'+y+'%">'+text+'</span>';
+  }
+  function renderGraph(){
+    const visible=visiblePersonIds();
+    const perspective=currentPerspective();
+    const shown=Object.keys(graphHouseholds).filter(key=>graphHouseholds[key].members.some(id=>visible.includes(id)));
+    const center={x:50,y:50};
+    const lineSpecs=[];
+    graphHouseholdLinks.forEach(link=>{
+      if(shown.includes(link.from)&&shown.includes(link.to)&&hasKinshipPath(link.people[0],link.people[1])){
+        lineSpecs.push({a:graphHouseholds[link.from],b:graphHouseholds[link.to],className:'secondary',bend:-.34});
+      }
+    });
+    shown.forEach((key,index)=>{
+      const h=graphHouseholds[key], bend=(index%2===0?.055:-.055);
+      lineSpecs.push({a:center,b:h,className:'ego',bend:bend});
+    });
+    /* Build real SVG path elements in the SVG namespace. Inserting path markup
+       through SVG innerHTML is not parsed as SVG in every browser, which left the
+       canvas blank. */
+    const svg=document.getElementById('graph-lines');
+    while(svg.firstChild) svg.removeChild(svg.firstChild);
+    lineSpecs.forEach(spec=>{
+      const c=graphCurveControl(spec.a,spec.b,spec.bend);
+      const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+      path.setAttribute('class','graph-line '+spec.className);
+      path.setAttribute('d','M '+(spec.a.x*10)+' '+(spec.a.y*7)+' Q '+(c.x*10)+' '+(c.y*7)+' '+(spec.b.x*10)+' '+(spec.b.y*7));
+      svg.appendChild(path);
+    });
+    const labels=shown.map((key,index)=>{
+      const h=graphHouseholds[key], bend=(index%2===0?.055:-.055);
+      return graphLabel(center,h,householdLabelFor(key,perspective),bend);
+    }).join('');
+    const centerName=perspective==='you'?'Me':perspectiveNames[perspective];
+    const nodes=document.getElementById('graph-nodes');
+    nodes.innerHTML=labels+'<div class="graph-node center" style="left:50%;top:50%"><strong>'+centerName+'</strong><small>Current perspective</small></div>'+shown.map(key=>{
+      const h=graphHouseholds[key], count=h.members.filter(id=>visible.includes(id)).length;
+      return '<button class="graph-node '+householdTone(key)+'" type="button" data-graph-house="'+key+'" aria-pressed="false" style="left:'+h.x+'%;top:'+h.y+'%"><strong>'+h.name+'</strong><small>'+count+' visible member'+(count===1?'':'s')+'</small><span class="primary-badge">Primary: '+escapeHtml(actorName(h.primaryMemberId))+'</span></button>';
+    }).join('');
+    document.getElementById('graph-shell').setAttribute('aria-label','Relationship graph centered on '+centerName+'. Dashed line connects Parents and Daniel’s family.');
+    document.getElementById('graph-members').classList.remove('visible');
+    nodes.querySelectorAll('[data-graph-house]').forEach(btn=>btn.addEventListener('click',()=>{
+      nodes.querySelectorAll('[data-graph-house]').forEach(other=>other.setAttribute('aria-pressed',String(other===btn)));
+      const h=graphHouseholds[btn.dataset.graphHouse], memberIds=h.members.filter(id=>visible.includes(id));
+      document.getElementById('graph-members-title').textContent=h.name+' · '+householdLabelFor(btn.dataset.graphHouse,perspective);
+      document.getElementById('graph-member-list').innerHTML=memberIds.map(id=>'<button class="graph-member" data-graph-person="'+id+'"><strong>'+people[id].name+'</strong><span>'+relationshipInfo(id).term+'</span>'+(id===h.primaryMemberId?'<span class="primary-badge">Primary member</span>':'')+'</button>').join('');
+      document.getElementById('graph-members').classList.add('visible');
+      document.querySelectorAll('[data-graph-person]').forEach(member=>member.addEventListener('click',()=>{showView('people');openPerson(member.dataset.graphPerson);}));
+    }));
+  }
+
+  function escapeHtml(value){ return String(value==null?'':value).replace(/[&<>'"]/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch];}); }
+  function actorName(id){ return id==='you'?'Sepand':(perspectiveNames[id]||id); }
+  function eventById(id){ return events.find(function(e){return e.id===id;}); }
+  function milestoneState(m){
+    const linked=m.eventId?eventById(m.eventId):null;
+    return linked||m;
+  }
+  function canSurfaceVerification(e){ return !e.isPrivate||canViewPrivateMilestone(e.owner||e.person); }
+  function verificationBadge(status){
+    const labels={verified:'✓ Verified',pending:'Awaiting verification',disputed:'Flagged for review'};
+    return '<span class="verification-status '+status+'">'+labels[status]+'</span>';
+  }
+  function renderVerificationQueue(){
+    const perspective=currentPerspective();
+    const ownRecords=events.filter(function(e){return e.person===perspective&&e.verification!=='verified'&&canSurfaceVerification(e);});
+    const ownerDisputes=perspective==='you'?events.filter(function(e){return e.person!=='you'&&e.verification==='disputed'&&canSurfaceVerification(e);}):[];
+    const records=ownRecords.concat(ownerDisputes.filter(function(e){return ownRecords.indexOf(e)<0;}));
+    const zone=document.getElementById('verification-zone'), stack=document.getElementById('verification-stack');
+    zone.classList.toggle('visible',records.length>0);
+    document.getElementById('verification-zone-title').textContent=perspective==='you'&&ownerDisputes.length?'Needs your attention':'Confirm your milestones';
+    stack.innerHTML=records.map(function(e){
+      const isOwn=e.person===perspective;
+      if(e.verification==='pending'&&isOwn){
+        return '<article class="verification-card" data-verification-id="'+e.id+'"><div class="verification-kicker">Added by '+escapeHtml(actorName(e.addedBy))+' — is this right?</div><h3>'+escapeHtml(e.title)+'</h3><p>'+escapeHtml(e.label)+' · '+escapeHtml(e.date)+'</p><div class="verification-actions"><button class="verify-btn" type="button" data-verify="'+e.id+'">Verify</button><button class="dispute-btn" type="button" data-dispute="'+e.id+'">Dispute</button></div></article>';
+      }
+      if(e.verification==='disputed'&&isOwn){
+        return '<article class="verification-card disputed" data-verification-id="'+e.id+'"><div class="verification-kicker">You’ve flagged this for review</div><h3>'+escapeHtml(e.title)+'</h3><p>'+(e.disputeNote?escapeHtml(e.disputeNote):'No correction note added.')+'</p></article>';
+      }
+      return '<article class="verification-card disputed" data-verification-id="'+e.id+'"><div class="verification-kicker">Flagged by '+escapeHtml(actorName(e.person))+'</div><h3>'+escapeHtml(e.title)+'</h3><p>'+(e.disputeNote?escapeHtml(e.disputeNote):'No correction note added.')+'</p></article>';
+    }).join('');
+  }
+  function setVerification(eventId,status,note){
+    const e=eventById(eventId); if(!e) return;
+    e.verification=status;
+    e.disputeNote=status==='disputed'?(note||''):'';
+    saveStore();
+    renderVerificationQueue();
+    if(activePersonId) openPerson(activePersonId,false);
+  }
+  let disputeEventId=null;
+  function openDisputeDialog(eventId){
+    disputeEventId=eventId;
+    document.getElementById('dispute-note').value='';
+    const dialog=document.getElementById('dispute-dialog');
+    dialog.classList.add('open'); dialog.setAttribute('aria-hidden','false');
+    document.getElementById('dispute-note').focus();
+  }
+  function closeDisputeDialog(){
+    disputeEventId=null;
+    const dialog=document.getElementById('dispute-dialog');
+    dialog.classList.remove('open'); dialog.setAttribute('aria-hidden','true');
+  }
+  document.addEventListener('click',function(e){
+    const verify=e.target.closest('[data-verify]'); if(verify){setVerification(verify.dataset.verify,'verified','');return;}
+    const dispute=e.target.closest('[data-dispute]'); if(dispute){openDisputeDialog(dispute.dataset.dispute);}
+  });
+  document.getElementById('cancel-dispute').addEventListener('click',closeDisputeDialog);
+  document.getElementById('submit-dispute').addEventListener('click',function(){if(disputeEventId)setVerification(disputeEventId,'disputed',document.getElementById('dispute-note').value.trim());closeDisputeDialog();});
+  document.getElementById('dispute-dialog').addEventListener('click',function(e){if(e.target===this)closeDisputeDialog();});
+
+  let activePersonId=null;
+  function openPerson(id, shouldScroll=true){
+    const p=people[id]; if(!p||!isPersonVisible(id)){ closePerson(); return; }
+    activePersonId=id;
+    document.getElementById('people-overview').classList.add('hidden');
+    const box=document.getElementById('person-detail'); box.classList.add('active');
+    const visibleFamily=p.family.filter(f=>isPersonVisible(f[2]));
+    const family=visibleFamily.length?visibleFamily.map(f=>'<button class="edge" data-related="'+f[2]+'"><span class="avatar">'+people[f[2]].initials+'</span><span><strong>'+f[0]+'</strong><span>'+f[1]+'</span></span></button>').join(''):'<p class="helper">No relationships in this perspective.</p>';
+    const milestones=p.milestones.filter(function(m){return !m.isPrivate||canViewPrivateMilestone(id);}).map(function(m){
+      const state=milestoneState(m), isOwnView=currentPerspective()===id;
+      let note='';
+      if(state.verification==='pending') note=isOwnView?'Added by '+actorName(state.addedBy)+' — is this right?':'Awaiting '+p.name.split(' ')[0]+'’s verification';
+      if(state.verification==='disputed') note=isOwnView?'You’ve flagged this for review':(currentPerspective()==='you'?(state.disputeNote||'Flagged without a note'):'Flagged for review');
+      const actions=state.verification==='pending'&&isOwnView&&m.eventId?'<div class="milestone-line-actions"><button class="verify-btn" type="button" data-verify="'+m.eventId+'">Verify</button><button class="dispute-btn" type="button" data-dispute="'+m.eventId+'">Dispute</button></div>':'';
+      return '<div class="milestone-line"><div class="milestone-line-copy"><strong>'+escapeHtml(m.title)+(m.isPrivate?' <span class="private-badge"><svg aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Private</span>':'')+'</strong>'+verificationBadge(state.verification)+(note?'<small>'+escapeHtml(note)+'</small>':'')+actions+'</div><span>'+escapeHtml(m.dateLabel)+'</span></div>';
+    }).join('');
+    const relation=relationshipInfo(id);
+    const relationTerm=relation.term==='Self'?'You':relation.term;
+    const relationExpl=relation.explanation||'This is you';
+    document.getElementById('detail-content').innerHTML='<div class="profile-head"><span class="avatar">'+p.initials+'</span><div><h1>'+p.name+'</h1><p><strong>'+relationTerm+'</strong> — '+relationExpl+'</p><span class="profile-household">'+p.household+' · '+(householdLabelFor(graphKeyByHouse[householdByPerson[id]],currentPerspective())||'Family')+'</span></div></div><div class="detail-grid"><section class="panel"><h2>Closeness</h2><span class="field-label">Used to rank reminders</span><div class="segmented closeness"><button '+(p.tier==='Inner circle'?'class="active"':'')+'>Inner circle</button><button '+(p.tier==='Close'?'class="active"':'')+'>Close</button><button '+(p.tier==='Casual'?'class="active"':'')+'>Casual</button></div><p class="helper">Family members inherit one tier lower unless you override them.</p></section><section class="panel"><h2>Family connections</h2><div class="edge-list">'+family+'</div></section><section class="panel"><h2>Milestones</h2><div class="milestone-list">'+milestones+'</div><button class="ghost-btn" data-add-milestone="'+id+'" style="margin-top:14px">+ Add milestone</button></section><section class="panel"><h2>Notes</h2><textarea placeholder="Gift ideas, message prompts, details worth remembering…"></textarea><p class="helper">Draft only; notes aren’t saved.</p></section></div>';
+    box.querySelectorAll('.closeness button').forEach(b=>b.addEventListener('click',()=>{ box.querySelectorAll('.closeness button').forEach(x=>x.classList.remove('active')); b.classList.add('active'); if(people[id]){ people[id].tier=b.textContent.trim(); saveStore(); } }));
+    box.querySelectorAll('[data-related]').forEach(b=>b.addEventListener('click',()=>openPerson(b.dataset.related)));
+    box.querySelector('[data-add-milestone]').addEventListener('click',()=>openSheetForMilestone(id));
+    if(shouldScroll) window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function closePerson(){ activePersonId=null; document.getElementById('people-overview').classList.remove('hidden'); document.getElementById('person-detail').classList.remove('active'); }
+  /* People page: households are rendered from the data model by renderHouseholds()
+     (called at boot and after every structural change), so added people and pods
+     appear immediately. Badges and subtitles are derived per perspective below. */
+  /* Perspective-relative row subtitle: the derived kinship term plus the original
+     suffix ("· married to Laleh", "· household anchor", "· age 3"). The viewed-as
+     person's own row reads "You". */
+  function personRowSubtitle(id){
+    const orig=(people[id]&&people[id].relation)||'';
+    if(currentPerspective()==='you') return orig;
+    const term=relationshipInfo(id).term;
+    const label=term==='Self'?'You':term;
+    const sep=orig.indexOf(' · ');
+    return sep>=0?label+orig.slice(sep):label;
+  }
+  /* Household badge text follows the current viewer via the derivation engine.
+     Badge color-coding (householdTone) stays owner-relative, so colors never shift
+     between perspectives. */
+  function renderPeopleLabels(){
+    const perspective=currentPerspective();
+    document.querySelectorAll('.household').forEach(h=>{
+      const badge=h.querySelector('.house-label'); if(!badge) return;
+      badge.textContent=householdLabelFor(h.dataset.household,perspective)||'';
+      h.querySelectorAll('.person-row').forEach(row=>{
+        row.querySelector('small').textContent=personRowSubtitle(row.dataset.person);
+      });
+    });
+  }
+  function filterPeople(){
+    const q=document.getElementById('people-search').value.trim().toLowerCase();
+    const visible=visiblePersonIds(); let count=0;
+    document.querySelectorAll('.household').forEach(h=>{
+      const householdMatch=!q||h.querySelector('.house-head').textContent.toLowerCase().includes(q);
+      let householdCount=0;
+      h.querySelectorAll('.person-row').forEach(row=>{
+        const id=row.dataset.person, subtitle=row.querySelector('small');
+        const base=personRowSubtitle(id);
+        const relation=relationshipInfo(id), relationMatch=!!q&&relationshipSearchText(id).includes(q);
+        const textMatch=!q||row.querySelector('strong').textContent.toLowerCase().includes(q)||base.toLowerCase().includes(q);
+        const matches=householdMatch||textMatch||relationMatch;
+        const show=visible.includes(id)&&matches;
+        subtitle.textContent=relationMatch?(relation.term==='Self'?'You':relation.term):base;
+        row.classList.toggle('perspective-empty',!show);
+        if(show){ householdCount++; count++; }
+      });
+      h.classList.toggle('perspective-empty',householdCount===0);
+    });
+    document.getElementById('empty-search').style.display=count?'none':'block';
+  }
+  function filterDigest(){
+    const visible=visiblePersonIds();
+    document.querySelectorAll('[data-digest-people]').forEach(item=>{
+      const ids=item.dataset.digestPeople.split(/\s+/);
+      const privateOwner=item.dataset.privateOwner;
+      const canSee=ids.some(id=>visible.includes(id))&&(!privateOwner||canViewPrivateMilestone(privateOwner));
+      item.classList.toggle('perspective-empty',!canSee);
+    });
+    const priorityCount=document.querySelectorAll('#priority-list [data-digest-people]:not(.perspective-empty)').length;
+    document.getElementById('priority-heading').classList.toggle('perspective-empty',priorityCount===0);
+    document.getElementById('priority-list').classList.toggle('perspective-empty',priorityCount===0);
+    document.getElementById('digest-priority-count').textContent=priorityCount;
+    document.getElementById('digest-summary-copy').textContent=priorityCount===0?'No high-priority messages in this perspective.':(priorityCount===1?'One message worth making time for.':(priorityCount===2?'Two messages worth making time for.':'Three messages worth making time for.'));
+    const perspective=currentPerspective();
+    document.getElementById('digest-perspective-label').textContent=perspective==='you'?'Your short list':perspectiveNames[perspective]+'’s short list';
+    const quietVisible=!!document.querySelector('#quiet-list .milestone-card:not(.perspective-empty)');
+    document.getElementById('quiet-heading').classList.toggle('perspective-empty',!quietVisible);
+    document.getElementById('quiet-list').classList.toggle('perspective-empty',!quietVisible);
+    document.querySelectorAll('.lower-list').forEach(list=>list.classList.toggle('perspective-empty',!list.querySelector('.lower-row:not(.perspective-empty)')));
+    const mobileLater=document.querySelector('.mobile-later');
+    mobileLater.classList.toggle('perspective-empty',!mobileLater.querySelector('.lower-row:not(.perspective-empty)'));
+  }
+  function applyPerspective(){
+    const perspective=currentPerspective();
+    const isYou=perspective==='you';
+    document.getElementById('perspective-status').classList.toggle('visible',!isYou);
+    document.getElementById('perspective-copy').textContent=isYou?'':'Viewing as '+perspectiveNames[perspective]+' · household, direct connections, and family circle';
+    const eventCount=events.filter(e=>e.people.some(id=>visiblePersonIds().includes(id))&&(!e.isPrivate||canViewPrivateMilestone(e.owner))).length;
+    document.getElementById('side-milestone-count').textContent=(eventCount===10?'Ten':eventCount)+' milestone'+(eventCount===1?'':'s')+' in the next 30 days';
+    renderCalendar();
+    filterDigest();
+    renderVerificationQueue();
+    renderPeopleLabels();
+    filterPeople();
+    renderGraph();
+    if(activePersonId){ if(isPersonVisible(activePersonId)) openPerson(activePersonId,false); else closePerson(); }
+  }
+  /* person-row click handlers are attached by renderHouseholds() */
+  document.getElementById('person-back').addEventListener('click',closePerson);
+  document.getElementById('people-search').addEventListener('input',filterPeople);
+  document.getElementById('perspective-filter').addEventListener('change',function(){applyPerspective();saveStore();});
+  document.getElementById('reset-perspective').addEventListener('click',()=>{const select=document.getElementById('perspective-filter');select.value='you';applyPerspective();saveStore();});
+  document.getElementById('reset-data').addEventListener('click',resetSampleData);
+  const validationErrors=validate();
+  if(validationErrors.length) validationErrors.forEach(e=>console.error('[milestone-tracker] relationship validation:',e));
+  else console.log('[milestone-tracker] relationship validation: 0 violations');
+  familyCircle=deriveFamilyCircle();
+  /* restore persisted UI prefs (viewing-as, calendar mode) */
+  if(storeData&&storeData.ui){
+    if(storeData.ui.viewingAs&&perspectiveNames[storeData.ui.viewingAs]) document.getElementById('perspective-filter').value=storeData.ui.viewingAs;
+    if(storeData.ui.calendarMode==='week'){ calendarMode='week'; document.querySelectorAll('[data-calendar-mode]').forEach(function(b){ b.classList.toggle('active',b.dataset.calendarMode==='week'); }); }
+  }
+  syncPerspectiveOptions();
+  renderHouseholds();
+  applyPerspective();
+
+  const invitePerson=document.getElementById('invite-person');
+  invitePerson.addEventListener('change',()=>{ const slug=invitePerson.value.toLowerCase().replace(/\s+/g,'-'); document.getElementById('invite-code').textContent='Demo invite · '+slug+'-7K2Q'; document.getElementById('copy-state').textContent=''; });
+  document.getElementById('copy-invite').addEventListener('click',()=>{
+    const text=document.getElementById('invite-code').textContent;
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(()=>document.getElementById('copy-state').textContent='Copied demo invite').catch(()=>document.getElementById('copy-state').textContent='Select the invite text to copy'); }
+    else document.getElementById('copy-state').textContent='Select the invite text to copy';
+  });
+  document.getElementById('add-child').addEventListener('click',()=>{
+    const row=document.createElement('div'); row.className='form-grid two'; row.style.marginTop='10px'; row.innerHTML='<div class="input-group"><label>Child’s name</label><input placeholder="Name" /></div><div class="input-group"><label>Birthday · year optional</label><input type="text" placeholder="Month, day, optional year" /></div>'; document.getElementById('child-list').after(row);
+  });
+  document.getElementById('preview-submit').addEventListener('click',()=>document.getElementById('form-result').style.display='block');
+
+  const sheet=document.getElementById('add-sheet');
+  const addPrivate=document.getElementById('add-private');
+  const pickerSearch=document.getElementById('person-picker-search');
+  const pickerOptions=document.getElementById('person-picker-options');
+  const pickerClear=document.getElementById('person-picker-clear');
+  const existingPodList=document.getElementById('existing-pod-list');
+  const podMemberPanel=document.getElementById('pod-member-panel');
+  const podMemberList=document.getElementById('pod-member-list');
+  const existingPodName=document.getElementById('existing-pod-name');
+  const existingPodRelation=document.getElementById('existing-pod-relation');
+  const existingPodRelationLabel=document.getElementById('existing-pod-relation-label');
+  let selectedPickerPerson='';
+  let selectedPodKey='';
+  let selectedLinkedPerson='';
+  let personSource='new';
+  let duplicateMatchId='';
+  /* ---- dynamic indexes: pods, pickers, people page -----------------------
+     podDefinitions, pickerGroups and the People page are rebuilt from the data
+     model (not static HTML), so added people and pods appear everywhere
+     immediately: pickers, pod lists, graph, and perspective options. */
+  let podDefinitions=[];
+  function rebuildPodDefinitions(){
+    podDefinitions=[{key:selfPod.key,ids:selfPod.members,primaryMemberId:selfPod.primaryMemberId}]
+      .concat(Object.keys(graphHouseholds).map(function(key){ return {key:key,ids:graphHouseholds[key].members,primaryMemberId:graphHouseholds[key].primaryMemberId}; }));
+  }
+  let pickerGroups=[];
+  function rebuildPickerGroups(){
+    rebuildPodDefinitions();
+    pickerGroups=podDefinitions.map(function(pod){
+      return {name:pod.key==='self'?'Your household':graphHouseholds[pod.key].name, ids:pod.ids.filter(function(id){ return id==='you'||!!people[id]; })};
+    });
+  }
+  function slugify(s){ return String(s==null?'':s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'person'; }
+  function uniquePersonId(name){ let base=slugify(name), id=base, n=2; while(people[id]||perspectiveNames[id]){ id=base+'-'+(n++); } return id; }
+  function uniqueEventId(base){ let id=slugify(base)||'milestone', n=2; while(eventById(id)){ id=slugify(base)+'-'+(n++); } return id; }
+  function uniquePodKey(name){ let base=slugify(name)||'pod', key=base, n=2; while(graphHouseholds[key]){ key=base+'-'+(n++); } return key; }
+  function initialsFor(name){ const parts=String(name==null?'':name).trim().split(/\s+/).filter(Boolean); return (parts.slice(0,2).map(function(w){ return w[0]; }).join('')||'?').toUpperCase(); }
+  function houseNameForPodKey(key){ return key==='parents'?'rahimi':key; }
+  function syncPerspectiveOptions(){
+    const select=document.getElementById('perspective-filter'); if(!select) return;
+    const keep=select.value;
+    Object.keys(perspectiveNames).forEach(function(id){
+      if(id==='you'||select.querySelector('option[value="'+id+'"]')) return;
+      const opt=document.createElement('option'); opt.value=id; opt.textContent=perspectiveNames[id]; select.appendChild(opt);
+    });
+    if(perspectiveNames[keep]) select.value=keep;
+  }
+  function renderHouseholds(){
+    const box=document.getElementById('households'); if(!box) return;
+    box.innerHTML=Object.keys(graphHouseholds).map(function(key){
+      const pod=graphHouseholds[key];
+      const memberIds=pod.members.filter(function(id){ return !!people[id]; });
+      const rows=memberIds.map(function(id){
+        const p=people[id];
+        const tierCls=p.tier==='Inner circle'?'inner':(p.tier==='Close'?'close':'');
+        const primary=id===pod.primaryMemberId?'<span class="primary-badge">Primary member</span>':'';
+        return '<button class="person-row" data-person="'+id+'"><span class="avatar">'+escapeHtml(p.initials||initialsFor(p.name))+'</span><span><strong>'+escapeHtml(p.name)+'</strong><small>'+escapeHtml(p.relation||'')+'</small>'+primary+'</span><span class="tier '+tierCls+'">'+escapeHtml(p.tier||'Close')+'</span></button>';
+      }).join('');
+      return '<section class="household" data-household="'+key+'"><div class="house-head"><h2>'+escapeHtml(pod.name)+'</h2><div class="house-meta"><span class="house-label"></span><span>'+memberIds.length+' member'+(memberIds.length===1?'':'s')+'</span></div></div>'+rows+'</section>';
+    }).join('');
+    box.querySelectorAll('.person-row').forEach(function(b){ b.addEventListener('click',function(){ openPerson(b.dataset.person); }); });
+  }
+  function renderPersonPicker(query){
+    const q=(query||'').trim().toLowerCase(), visible=visiblePersonIds(); let total=0;
+    pickerOptions.innerHTML=pickerGroups.map(function(group){
+      const ids=group.ids.filter(function(id){return visible.includes(id)&&(actorName(id).toLowerCase().includes(q)||(id!=='you'&&relationshipInfo(id).term.toLowerCase().includes(q)));});
+      total+=ids.length;
+      if(!ids.length) return '';
+      return '<div class="picker-group"><span class="picker-group-label">'+escapeHtml(group.name)+'</span>'+ids.map(function(id){return '<button class="picker-option" type="button" role="option" data-picker-person="'+id+'" aria-selected="'+String(id===selectedPickerPerson)+'"><strong>'+escapeHtml(actorName(id))+'</strong><span>'+(id==='you'?'You':escapeHtml(relationshipInfo(id).term))+'</span></button>';}).join('')+'</div>';
+    }).join('');
+    document.getElementById('person-picker-empty').style.display=total?'none':'block';
+    pickerOptions.classList.toggle('open',total>0);
+    pickerSearch.setAttribute('aria-expanded',String(total>0));
+  }
+  function clearPicker(){
+    selectedPickerPerson=''; pickerSearch.value=''; pickerSearch.readOnly=false;
+    pickerClear.classList.remove('visible');
+    document.getElementById('person-picker-error').classList.remove('visible');
+    renderPersonPicker(''); pickerSearch.focus();
+  }
+  function selectPickerPerson(id){
+    selectedPickerPerson=id; pickerSearch.value=actorName(id); pickerSearch.readOnly=true;
+    pickerClear.classList.add('visible'); pickerOptions.classList.remove('open');
+    pickerSearch.setAttribute('aria-expanded','false');
+    document.getElementById('person-picker-error').classList.remove('visible');
+  }
+  rebuildPickerGroups(); /* build podDefinitions + pickerGroups from the data model */
+  function podByKey(key){ return podDefinitions.find(function(pod){return pod.key===key;}); }
+  function podLabelFor(key){
+    if(key!=='self') return householdLabelFor(key,currentPerspective())||graphHouseholds[key].name;
+    if(currentPerspective()==='you') return 'Your household';
+    const term=kinshipInfo(currentPerspective(),'you').term;
+    return term==='Self'?'Your household':term+'’s family';
+  }
+  function podKeyForPerson(id){
+    if(id==='you') return 'self';
+    return graphKeyByHouse[householdByPerson[id]]||'';
+  }
+  function visiblePodMembers(pod){
+    const visible=visiblePersonIds();
+    return pod.ids.filter(function(id){return visible.includes(id);});
+  }
+  function relationshipToPrimary(pod,id){
+    if(id===pod.primaryMemberId) return 'Primary member';
+    return kinshipInfo(pod.primaryMemberId,id).term;
+  }
+  function typedEdgeToPrimary(personId,kind,pod){ return [personId,kind,pod.primaryMemberId]; }
+  function renderExistingPodPicker(){
+    const pods=podDefinitions.map(function(pod){return {key:pod.key,ids:visiblePodMembers(pod),primaryMemberId:pod.primaryMemberId};}).filter(function(pod){return pod.ids.length;});
+    if(selectedPodKey&&!pods.some(function(pod){return pod.key===selectedPodKey;})){selectedPodKey='';selectedLinkedPerson='';}
+    existingPodList.innerHTML=pods.map(function(pod){
+      const label=podLabelFor(pod.key), primary=actorName(pod.primaryMemberId), count=pod.ids.length;
+      return '<button class="pod-row" type="button" role="option" data-pod-key="'+pod.key+'" aria-selected="'+String(pod.key===selectedPodKey)+'"><span><strong>'+escapeHtml(label)+'</strong><small>'+count+' member'+(count===1?'':'s')+' · Primary: '+escapeHtml(primary)+'</small></span><span class="primary-badge">Primary member</span></button>';
+    }).join('');
+    const selectedPod=pods.find(function(pod){return pod.key===selectedPodKey;});
+    podMemberPanel.classList.toggle('visible',!!selectedPod);
+    if(selectedPod){
+      const sourcePod=podByKey(selectedPod.key), primaryName=actorName(sourcePod.primaryMemberId);
+      existingPodRelationLabel.textContent='Relationship to '+primaryName;
+      document.getElementById('pod-member-title').textContent='Current members of '+podLabelFor(selectedPod.key);
+      document.getElementById('pod-member-count').textContent=selectedPod.ids.length+' visible';
+      podMemberList.innerHTML=selectedPod.ids.map(function(id){
+        return '<div class="pod-member-row"><span><strong>'+escapeHtml(actorName(id))+'</strong><small>'+escapeHtml(relationshipToPrimary(sourcePod,id))+'</small></span>'+(id===sourcePod.primaryMemberId?'<span class="primary-badge">Primary member</span>':'')+'</div>';
+      }).join('');
+    } else podMemberList.innerHTML='';
+    document.getElementById('link-person-empty').style.display=pods.length?'none':'block';
+  }
+  function selectExistingPod(key){
+    const pod=podByKey(key);
+    if(!pod||!visiblePodMembers(pod).length) return;
+    selectedPodKey=key;
+    selectedLinkedPerson='';
+    existingPodName.value='';
+    existingPodRelation.value='';
+    document.getElementById('existing-pod-duplicate-hint').classList.remove('visible');
+    document.getElementById('existing-node-note').classList.remove('visible');
+    document.getElementById('link-person-error').classList.remove('visible');
+    renderExistingPodPicker();
+    existingPodName.focus();
+  }
+  function clearLinkedPerson(shouldFocus){
+    selectedPodKey=''; selectedLinkedPerson='';
+    existingPodName.value=''; existingPodRelation.value='';
+    document.getElementById('link-person-error').classList.remove('visible');
+    document.getElementById('existing-node-note').classList.remove('visible');
+    document.getElementById('existing-pod-duplicate-hint').classList.remove('visible');
+    renderExistingPodPicker();
+    if(shouldFocus){const first=existingPodList.querySelector('[data-pod-key]');if(first)first.focus();}
+  }
+  function selectLinkedPerson(id){
+    if(!visiblePersonIds().includes(id)) return;
+    selectedPodKey=podKeyForPerson(id);
+    selectedLinkedPerson=id;
+    existingPodName.value=actorName(id);
+    renderExistingPodPicker();
+    document.getElementById('link-person-error').classList.remove('visible');
+    const note=document.getElementById('existing-node-note');
+    note.textContent='This will link '+actorName(id)+'’s existing graph node instead of creating a duplicate.';
+    note.classList.add('visible');
+    renderDuplicateHints();
+  }
+  function duplicateForName(value){
+    const typed=value.trim().toLowerCase();
+    if(!typed) return '';
+    return visiblePersonIds().find(function(id){return actorName(id).toLowerCase()===typed;})||'';
+  }
+  function renderOneDuplicateHint(input,hint){
+    const match=duplicateForName(input.value);
+    if(input===existingPodName) duplicateMatchId=match;
+    hint.classList.toggle('visible',!!match);
+    hint.innerHTML=match?escapeHtml(actorName(match))+' is already in your graph — <button class="link-button" type="button" data-use-existing="'+match+'">link the existing person instead</button>.':'';
+  }
+  function renderDuplicateHints(){
+    renderOneDuplicateHint(document.getElementById('add-name'),document.getElementById('duplicate-person-hint'));
+    renderOneDuplicateHint(existingPodName,document.getElementById('existing-pod-duplicate-hint'));
+  }
+  function setPersonSource(source){
+    personSource=source;
+    document.querySelectorAll('#person-source-choice [data-person-source]').forEach(function(btn){btn.classList.toggle('active',btn.dataset.personSource===source);});
+    document.getElementById('new-person-field').classList.toggle('hidden',source!=='new');
+    document.getElementById('new-person-household-field').classList.toggle('hidden',source!=='new');
+    document.getElementById('link-person-field').classList.toggle('hidden',source!=='existing');
+    document.getElementById('add-relation-field').classList.toggle('hidden',source==='existing');
+    document.getElementById('add-preview').style.display='none';
+    if(source==='new') renderDuplicateHints();
+    else renderExistingPodPicker();
+  }
+  pickerSearch.addEventListener('focus',function(){if(!selectedPickerPerson)renderPersonPicker(this.value);});
+  pickerSearch.addEventListener('click',function(){if(!selectedPickerPerson)renderPersonPicker(this.value);});
+  pickerSearch.addEventListener('input',function(){selectedPickerPerson='';pickerClear.classList.remove('visible');renderPersonPicker(this.value);});
+  pickerOptions.addEventListener('click',function(e){const option=e.target.closest('[data-picker-person]');if(option)selectPickerPerson(option.dataset.pickerPerson);});
+  pickerClear.addEventListener('click',clearPicker);
+  existingPodList.addEventListener('click',function(e){const pod=e.target.closest('[data-pod-key]');if(pod)selectExistingPod(pod.dataset.podKey);});
+  document.getElementById('add-name').addEventListener('input',renderDuplicateHints);
+  existingPodName.addEventListener('input',function(){selectedLinkedPerson='';document.getElementById('existing-node-note').classList.remove('visible');renderDuplicateHints();});
+  function useExistingFromHint(id){setPersonSource('existing');selectExistingPod(podKeyForPerson(id));selectLinkedPerson(id);existingPodRelation.focus();}
+  document.getElementById('duplicate-person-hint').addEventListener('click',function(e){const use=e.target.closest('[data-use-existing]');if(use)useExistingFromHint(use.dataset.useExisting);});
+  document.getElementById('existing-pod-duplicate-hint').addEventListener('click',function(e){const use=e.target.closest('[data-use-existing]');if(use)useExistingFromHint(use.dataset.useExisting);});
+  document.querySelectorAll('#person-source-choice [data-person-source]').forEach(function(btn){btn.addEventListener('click',function(){setPersonSource(btn.dataset.personSource);if(btn.dataset.personSource==='new')document.getElementById('add-name').focus();else{const first=existingPodList.querySelector('[data-pod-key]');if(first)first.focus();}});});
+  document.addEventListener('click',function(e){
+    if(!e.target.closest('#person-picker')){pickerOptions.classList.remove('open');pickerSearch.setAttribute('aria-expanded','false');}
+  });
+  function refreshPersonPickerForPerspective(){
+    const visible=visiblePersonIds();
+    if(selectedPickerPerson&&!visible.includes(selectedPickerPerson)){
+      selectedPickerPerson='';
+      pickerSearch.value='';
+      pickerSearch.readOnly=false;
+      pickerClear.classList.remove('visible');
+      document.getElementById('person-picker-error').classList.remove('visible');
+    }
+    if(selectedLinkedPerson&&!visible.includes(selectedLinkedPerson)) clearLinkedPerson(false);
+    const mode=document.querySelector('#add-mode .active').dataset.mode;
+    if(sheet.classList.contains('open')&&mode!=='person'&&!selectedPickerPerson) renderPersonPicker(pickerSearch.value);
+    else if(!selectedPickerPerson){ pickerOptions.classList.remove('open'); pickerSearch.setAttribute('aria-expanded','false'); }
+    if(sheet.classList.contains('open')&&mode==='person'&&personSource==='existing') renderExistingPodPicker();
+    renderDuplicateHints();
+  }
+  /* applyPerspective updates the rest of the app. These listeners keep an already
+     open picker in lockstep, including the programmatic "Reset to You" control. */
+  document.getElementById('perspective-filter').addEventListener('change',refreshPersonPickerForPerspective);
+  document.getElementById('reset-perspective').addEventListener('click',refreshPersonPickerForPerspective);
+  function setAddMode(mode){
+    document.querySelectorAll('#add-mode button').forEach(function(x){x.classList.toggle('active',x.dataset.mode===mode);});
+    const isPerson=mode==='person';
+    document.getElementById('person-source-field').classList.toggle('hidden',!isPerson);
+    document.getElementById('existing-person-field').classList.toggle('hidden',isPerson);
+    document.getElementById('add-tier-field').classList.toggle('hidden',!isPerson);
+    document.getElementById('add-relation-field').classList.toggle('hidden',isPerson&&personSource==='existing');
+    document.getElementById('privacy-control').classList.toggle('visible',!isPerson);
+    document.getElementById('add-date-field').classList.toggle('hidden',isPerson);
+    document.getElementById('add-type-field').classList.toggle('hidden',isPerson||mode==='remembrance');
+    if(!isPerson&&!document.getElementById('add-date').value) document.getElementById('add-date').value=sampleToday;
+    document.getElementById('add-relation-label').textContent=isPerson?'Relationship':(mode==='remembrance'?'Remembrance title':'Milestone title');
+    document.getElementById('add-relation').placeholder=isPerson?'Friend, cousin, colleague…':(mode==='remembrance'?'What should be remembered?':'Birthday, anniversary, or another date');
+    document.getElementById('add-preview').style.display='none';
+    if(isPerson) setPersonSource(personSource);
+    else {
+      document.getElementById('new-person-field').classList.add('hidden');
+      document.getElementById('new-person-household-field').classList.add('hidden');
+      document.getElementById('link-person-field').classList.add('hidden');
+      renderPersonPicker('');
+    }
+  }
+  function openSheetForMilestone(id){
+    addPrivate.checked=false; setAddMode('milestone'); selectPickerPerson(id);
+    document.getElementById('add-date').value=sampleToday;
+    document.getElementById('add-relation').value='';
+    sheet.classList.add('open'); sheet.setAttribute('aria-hidden','false');
+    document.getElementById('add-relation').focus();
+  }
+  document.getElementById('open-add').addEventListener('click',function(){
+    addPrivate.checked=false; document.getElementById('add-name').value=''; document.getElementById('add-relation').value=''; document.getElementById('add-household').selectedIndex=0; existingPodName.value=''; existingPodRelation.value=''; document.getElementById('add-date').value=sampleToday;
+    clearPicker(); clearLinkedPerson(false); personSource='new'; setAddMode('person');
+    sheet.classList.add('open');sheet.setAttribute('aria-hidden','false');document.getElementById('add-name').focus();
+  });
+  function closeSheet(){sheet.classList.remove('open');sheet.setAttribute('aria-hidden','true');pickerOptions.classList.remove('open');}
+  document.getElementById('close-add').addEventListener('click',closeSheet);
+  sheet.addEventListener('click',function(e){if(e.target===sheet)closeSheet();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){if(document.getElementById('dispute-dialog').classList.contains('open'))closeDisputeDialog();else closeSheet();}});
+  document.querySelectorAll('#add-mode button').forEach(function(b){b.addEventListener('click',function(){setAddMode(b.dataset.mode);if(b.dataset.mode==='person'){addPrivate.checked=false;if(personSource==='new')document.getElementById('add-name').focus();else{const first=existingPodList.querySelector('[data-pod-key]');if(first)first.focus();}}else{pickerSearch.focus();}});});
+  document.getElementById('add-person-first').addEventListener('click',function(){personSource='new';setAddMode('person');addPrivate.checked=false;document.getElementById('add-name').focus();const p=document.getElementById('add-preview');p.style.display='block';p.textContent='Create the person here first. Then return to Milestone and select them from the graph.';});
+  /* ---- real writes: add person / add milestone (persisted) ---- */
+  function relationKindForText(text){
+    const t=String(text||'').toLowerCase();
+    if(/spouse|wife|husband|partner/.test(t)) return 'spouse';
+    if(/brother|sister|sibling/.test(t)) return 'sibling';
+    if(/colleague|coworker|co-worker/.test(t)) return 'colleague';
+    if(/\bfather\b|\bmother\b|\bdad\b|\bmom\b|\bparent\b/.test(t)) return 'parent-of-you';
+    if(/\bson\b|\bdaughter\b|\bchild\b|\bkid\b/.test(t)) return 'child-of-you';
+    return 'friend';
+  }
+  function afterStructuralChange(){
+    const errors=validate();
+    if(errors.length) console.error('[milestone-tracker] relationship validation:',errors);
+    rebuildPickerGroups(); syncPerspectiveOptions(); renderHouseholds(); saveStore(); applyPerspective();
+  }
+  function commitNewPodPerson(){
+    const name=document.getElementById('add-name').value.trim();
+    const relText=document.getElementById('add-relation').value.trim();
+    const tier=document.getElementById('add-tier').value;
+    if(!name){ document.getElementById('add-name').focus(); return false; }
+    const id=uniquePersonId(name);
+    const parts=name.split(/\s+/), first=parts[0], last=parts.length>1?parts[parts.length-1]:'';
+    const podKey=uniquePodKey(last?last+'-family':first+'-household');
+    const podName=last?(last.charAt(0).toUpperCase()+last.slice(1)+' family'):first+'\u2019s household';
+    const kind=relationKindForText(relText);
+    if(kind==='parent-of-you') kinEdges.push([id,'parent','you']);
+    else if(kind==='child-of-you') kinEdges.push(['you','parent',id]);
+    else kinEdges.push(['you',kind,id]);
+    buildKinAdj();
+    graphHouseholds[podKey]={name:podName,members:[id],primaryMemberId:id,x:50,y:8};
+    graphKeyByHouse[podKey]=podKey;
+    householdByPerson[id]=podKey;
+    perspectiveNames[id]=name;
+    directConnections[id]=[id,'you'];
+    people[id]={name:name,initials:initialsFor(name),relation:(relText||'Connection')+' \u00b7 household anchor',tier:tier,household:podName,family:[],milestones:[]};
+    afterStructuralChange();
+    return true;
+  }
+  function commitExistingPodPerson(){
+    const pod=podByKey(selectedPodKey);
+    const relationKind=existingPodRelation.value;
+    if(!pod){ document.getElementById('link-person-error').classList.add('visible'); return false; }
+    if(selectedLinkedPerson){
+      /* link an existing node: add the typed edge to the primary, no duplicate node */
+      if(!relationKind){ document.getElementById('link-person-error').classList.add('visible'); existingPodRelation.focus(); return false; }
+      kinEdges.push([selectedLinkedPerson,relationKind,pod.primaryMemberId]);
+      buildKinAdj();
+      document.getElementById('link-person-error').classList.remove('visible');
+      afterStructuralChange();
+      return true;
+    }
+    const name=existingPodName.value.trim();
+    if(!name||!relationKind){ document.getElementById('link-person-error').classList.add('visible'); (name?existingPodRelation:existingPodName).focus(); return false; }
+    document.getElementById('link-person-error').classList.remove('visible');
+    const id=uniquePersonId(name);
+    const primaryId=pod.primaryMemberId, primaryFirst=actorName(primaryId).split(' ')[0];
+    const kindLabels={parent:'Parent',spouse:'Spouse',sibling:'Sibling',friend:'Friend',colleague:'Colleague'};
+    const inverse={parent:'Child',spouse:'Spouse',sibling:'Sibling',friend:'Friend',colleague:'Colleague'};
+    kinEdges.push([id,relationKind,primaryId]);
+    buildKinAdj();
+    if(pod.key==='self') selfPod.members.push(id); else graphHouseholds[pod.key].members.push(id);
+    householdByPerson[id]=pod.key==='self'?'self':houseNameForPodKey(pod.key);
+    perspectiveNames[id]=name;
+    directConnections[id]=[id,primaryId];
+    people[id]={name:name,initials:initialsFor(name),relation:kindLabels[relationKind]+' of '+primaryFirst,tier:document.getElementById('add-tier').value,household:pod.key==='self'?'Your household':graphHouseholds[pod.key].name,family:[[actorName(primaryId),inverse[relationKind]+' (pod)',primaryId]],milestones:[]};
+    if(people[primaryId]) people[primaryId].family.push([name,kindLabels[relationKind]+' (pod)',id]);
+    afterStructuralChange();
+    return true;
+  }
+  function commitMilestone(){
+    const mode=document.querySelector('#add-mode .active').dataset.mode;
+    if(!selectedPickerPerson){ document.getElementById('person-picker-error').classList.add('visible'); pickerSearch.focus(); return false; }
+    document.getElementById('person-picker-error').classList.remove('visible');
+    const title=document.getElementById('add-relation').value.trim()||(mode==='remembrance'?'Remembrance':'Milestone');
+    const date=document.getElementById('add-date').value||sampleToday;
+    const type=mode==='remembrance'?'remembrance':document.getElementById('add-type').value;
+    const isPrivate=document.getElementById('add-private').checked;
+    const personId=selectedPickerPerson;
+    const id=uniqueEventId(title+'-'+personId);
+    const e={id:id,date:date,label:actorName(personId).split(' ')[0]+' \u00b7 '+title,short:title,title:title,type:type,house:householdByPerson[personId]||'self',person:personId,people:[personId],addedBy:'you',verification:personId==='you'?'verified':'pending'};
+    if(isPrivate){ e.isPrivate=true; e.owner=personId; }
+    events.push(e);
+    const dParts=String(date).split('-');
+    const dateLabel=dParts.length===3?shortMonths[parseInt(dParts[1],10)-1]+' '+parseInt(dParts[2],10):String(date);
+    if(people[personId]) people[personId].milestones.push({id:id,title:title,dateLabel:dateLabel,isPrivate:!!isPrivate,addedBy:'you',verification:e.verification,eventId:id,disputeNote:''});
+    saveStore(); renderCalendar(); renderVerificationQueue();
+    if(activePersonId&&isPersonVisible(activePersonId)) openPerson(activePersonId,false);
+    return true;
+  }
+  document.getElementById('save-add').addEventListener('click',function(){
+    const mode=document.querySelector('#add-mode .active').dataset.mode;
+    const ok=mode==='person'?((personSource==='existing')?commitExistingPodPerson():commitNewPodPerson()):commitMilestone();
+    if(ok){ closeSheet(); document.getElementById('add-preview').style.display='none'; }
+  });
+  document.getElementById('preview-add').addEventListener('click',function(){
+    const mode=document.querySelector('#add-mode .active').dataset.mode;
+    const p=document.getElementById('add-preview');
+    if(mode==='person'){
+      const tier=document.getElementById('add-tier').value;
+      if(personSource==='existing'){
+        const pod=podByKey(selectedPodKey), name=existingPodName.value.trim(), relationKind=existingPodRelation.value;
+        if(!pod||!name||!relationKind){document.getElementById('link-person-error').classList.add('visible');const target=!pod?existingPodList.querySelector('[data-pod-key]'):(!name?existingPodName:existingPodRelation);if(target)target.focus();return;}
+        document.getElementById('link-person-error').classList.remove('visible');
+        const edge=typedEdgeToPrimary(selectedLinkedPerson||'(new person)',relationKind,pod);
+        const action=selectedLinkedPerson?'link '+actorName(selectedLinkedPerson)+'’s existing node':'create '+name;
+        p.style.display='block';p.textContent='Preview: '+action+' in '+podLabelFor(pod.key)+' · '+relationKind+' of '+actorName(pod.primaryMemberId)+' · '+tier+' · typed '+edge[1]+' edge to the primary member';return;
+      }
+      const rel=document.getElementById('add-relation').value.trim()||'Relationship not set';
+      const name=document.getElementById('add-name').value.trim()||'Unnamed person';
+      p.style.display='block';p.textContent='Preview: create '+name+' as the primary member of a new Pod · '+rel+' · '+tier;return;
+    }
+    if(!selectedPickerPerson){document.getElementById('person-picker-error').classList.add('visible');pickerSearch.focus();return;}
+    const title=document.getElementById('add-relation').value.trim()||(mode==='remembrance'?'Remembrance':'Milestone');
+    const privacy=addPrivate.checked?'Private — household only':'Shared with visible connections';
+    const verification=selectedPickerPerson==='you'?'Verified (self-entered)':'Pending '+actorName(selectedPickerPerson)+'’s verification';
+    p.style.display='block';p.textContent='Preview: '+actorName(selectedPickerPerson)+' · '+title+' · '+privacy+' · '+verification;
+  });
+})();
+</script>
+</body>
+</html>
