@@ -1409,7 +1409,8 @@
     const isYou=perspective==='you';
     document.getElementById('perspective-status').classList.toggle('visible',!isYou);
     document.getElementById('perspective-copy').textContent=isYou?'':'Viewing as '+perspectiveNames[perspective]+' · household, direct connections, and family circle';
-    const eventCount=events.filter(e=>e.people.some(id=>visiblePersonIds().includes(id))&&(!e.isPrivate||canViewPrivateMilestone(e.owner))).length;
+    const winParts=sampleToday.split('-').map(Number); const winEnd=new Date(winParts[0],winParts[1]-1,winParts[2]); winEnd.setDate(winEnd.getDate()+30); const winEndIso=isoDate(winEnd);
+    const eventCount=events.filter(e=>e.date>=sampleToday&&e.date<=winEndIso&&e.people.some(id=>visiblePersonIds().includes(id))&&(!e.isPrivate||canViewPrivateMilestone(e.owner))).length;
     document.getElementById('side-milestone-count').textContent=(eventCount===10?'Ten':eventCount)+' milestone'+(eventCount===1?'':'s')+' in the next 30 days';
     renderCalendar();
     filterDigest();
